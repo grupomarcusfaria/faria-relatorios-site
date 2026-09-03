@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>O que a lei manda o robô dizer</title>
+<style>
+  :root{
+    --fundo:#FAFAF7; --tinta:#20261F; --tinta2:#5A6157; --tinta3:#8A9086;
+    --superficie:#FFFFFF; --borda:#E3E5DC; --borda2:#CDD1C4;
+    --lima:#5F7A00; --lima-viva:#7A9C00; --lima-fundo:#EFF5D8;
+    --violeta:#6D4AFF; --violeta-fundo:#EEEAFF;
+    --magenta:#B4266E; --magenta-fundo:#FBE7F1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+      --superficie:#1F2523; --borda:#2C3431; --borda2:#3A423E;
+      --lima:#C6F135; --lima-viva:#C6F135; --lima-fundo:#232B14;
+      --violeta:#A18FFF; --violeta-fundo:#241F3D;
+      --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+    --superficie:#1F2523; --borda:#2C3431; --borda2:#3A423E;
+    --lima:#C6F135; --lima-viva:#C6F135; --lima-fundo:#232B14;
+    --violeta:#A18FFF; --violeta-fundo:#241F3D;
+    --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+  }
+  body{background:var(--fundo);color:var(--tinta);margin:0;
+    font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:15.5px;line-height:1.6}
+  .pagina{max-width:900px;margin:0 auto;padding:38px 20px 70px}
+  .selo{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--tinta3);margin-bottom:8px}
+  h1{font-size:1.85rem;line-height:1.15;margin:0 0 8px;text-wrap:balance;letter-spacing:-.01em}
+  .lede{color:var(--tinta2);max-width:64ch;margin:0 0 22px}
+  h2{font-size:1.15rem;margin:44px 0 10px;letter-spacing:-.01em}
+  h2 .num{color:var(--tinta3);font-weight:400;margin-right:6px}
+  h3{font-size:.95rem;margin:26px 0 6px}
+  p{max-width:70ch;margin:8px 0}
+  li{max-width:68ch;margin:6px 0}
+  a{color:var(--violeta)}
+  .veredito{border-left:5px solid var(--lima);background:var(--lima-fundo);border-radius:0 12px 12px 0;
+    padding:16px 20px;margin:20px 0}
+  .veredito .txt{max-width:66ch}
+  .veredito b.nao{color:var(--lima)}
+  .aviso{border-left:4px solid var(--magenta);background:var(--magenta-fundo);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0}
+  .aviso b:first-child{color:var(--magenta)}
+  .aviso p{margin:6px 0}
+  .fonte{font-size:.72rem;color:var(--tinta3);margin-top:2px;word-break:break-word}
+  .lista-fina{list-style:none;padding:0;margin:12px 0}
+  .lista-fina li{border-top:1px solid var(--borda);padding:10px 0 10px 2px;margin:0;max-width:none}
+  .lista-fina li:last-child{border-bottom:1px solid var(--borda)}
+  .nivel{display:inline-block;font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
+    padding:2px 9px;border-radius:999px;margin-right:8px;white-space:nowrap;vertical-align:middle}
+  .nivel.agora{background:var(--magenta-fundo);color:var(--magenta)}
+  .nivel.piloto{background:var(--violeta-fundo);color:var(--violeta)}
+  .nivel.depois{border:1px solid var(--borda2);color:var(--tinta3)}
+  .chat{background:var(--superficie);border:1px solid var(--borda);border-radius:14px;padding:16px 18px;margin:16px 0;max-width:62ch}
+  .chat .balao{background:var(--lima-fundo);border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:.92rem;white-space:pre-wrap}
+  .chat .quem{font-size:.68rem;color:var(--tinta3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em}
+  .passos{counter-reset:p;list-style:none;padding:0;margin:12px 0}
+  .passos li{border-top:1px solid var(--borda);padding:8px 0 8px 34px;position:relative;max-width:none}
+  .passos li::before{counter-increment:p;content:counter(p);position:absolute;left:2px;top:9px;
+    font-size:.72rem;color:var(--tinta3);font-variant-numeric:tabular-nums}
+  .passos .quem-faz{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;margin-left:6px}
+  .passos .cl{color:var(--lima)}
+  .passos .ma{color:var(--violeta)}
+  .passos .mc{color:var(--magenta)}
+  .metodo{border-top:1px solid var(--borda2);margin-top:46px;padding-top:14px;font-size:.8rem;color:var(--tinta3)}
+  .metodo p{max-width:78ch}
+  .voltar{font-size:.78rem}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <p class="voltar"><a href="./">← todas as pesquisas</a></p>
+  <p class="selo">Dossiê · compliance do agente · 03 set 2026</p>
+  <h1>O que a lei manda o robô dizer — e o que ela não manda</h1>
+  <p class="lede">A IA do iFood abre a conversa com "ao continuar, você concorda com os termos"
+    e um botão. Precisamos disso? Vinte agentes de pesquisa leram os termos da OpenAI, a LGPD,
+    os guias da ANPD e as normas da OAB nas fontes primárias — cada citação conferida de volta
+    contra a fonte — e a resposta muda o que vamos construir.</p>
+
+  <div class="veredito"><div class="txt">
+    <b class="nao">NÃO — e copiar o iFood seria um tiro no pé.</b> Nossa base legal é o
+    art. 7º, V, da LGPD (a pessoa procurou o escritório): quem opera nessa base <b>não pede
+    consentimento — informa</b>. O formato "continuar = concordar" é consentimento tácito, que
+    a própria ANPD desaconselha por escrito; e exibir fórmula de aceite importaria o regime
+    jurídico mais frágil que existe (ônus de prova, revogação, nulidade). A única coisa
+    aproveitável do padrão iFood é o <b>link</b>: uma linha de transparência na saudação
+    apontando para um aviso de privacidade de uma página.
+  </div></div>
+  <h2><span class="num">1.</span>Por que o aceite não é para nós</h2>
+  <p>Três razões, todas com fonte verificada:</p>
+  <ul>
+    <li><b>A base legal certa dispensa aceite.</b> O art. 7º da LGPD lista dez hipóteses
+      alternativas; consentimento é a I, a nossa é a V — "procedimentos preliminares
+      relacionados a contrato, <i>a pedido do titular</i>". O que precisamos provar não é
+      concordância: é que o lead iniciou o contato.
+      <div class="fonte">Lei 13.709/2018, art. 7º, V — texto literal conferido</div></li>
+    <li><b>A ANPD condena o consentimento tácito.</b> O guia de cookies (out/2022) diz, com
+      todas as letras, que "não é recomendável a pressuposição de que, ao continuar a
+      navegação, o titular forneceria consentimento" — o espelho exato do "ao continuar
+      você concorda".
+      <div class="fonte">ANPD, Guia Orientativo — Cookies e Proteção de Dados Pessoais (out/2022)</div></li>
+    <li><b>Fórmula de aceite importa o regime errado.</b> Exibir "você concorda" cria
+      aparência de base consentimento — e com ela o ônus da prova do controlador
+      (art. 8º, §2º), a revogabilidade a qualquer tempo e a nulidade por informação
+      insuficiente. Ganharíamos as fraquezas do consentimento sem precisar dele.
+      <div class="fonte">Lei 13.709/2018, art. 8º, §§ 2º-6º</div></li>
+  </ul>
+
+  <h2><span class="num">2.</span>O que entra no lugar: informar, provar, publicar</h2>
+  <p>O modelo em camadas que a própria ANPD valida. <b>Camada 1</b> é a saudação — o
+    disclosure de IA que já existe ganha a linha que faltava, a do art. 9º §3º: avisar
+    "com destaque" que os dados são condição do atendimento, e onde exercer os direitos.
+    <b>Camada 2</b> é o aviso de privacidade de uma página (rascunho pronto para o Marcus:
+    <a href="aviso-privacidade-DRAFT.html">ver o draft</a>). <b>Camada 3</b> é nossa marca
+    registrada: em vez de provar que a pessoa "aceitou", o banco local grava o timestamp e o
+    texto exato da abertura enviada em cada conversa — prova de entrega da informação,
+    accountability do art. 6º, X.</p>
+
+  <h3>A nova primeira mensagem (aguarda o "de acordo" do Marcus)</h3>
+  <div class="chat">
+    <div class="quem">FARIA · agente de IA · WhatsApp</div>
+    <div class="balao">Boa tarde! Você está falando com o <b>Grupo Faria</b>. Eu sou o <b>FARIA</b>, agente de inteligência artificial do escritório: faço essa primeira conversa, e quem analisa e responde é a nossa equipe, de pessoas de verdade, aqui mesmo neste chat.
+
+<b>Como posso te chamar? E me conta, com as suas palavras, o que está acontecendo.</b> Se for mais fácil, mande um áudio que eu escuto e registro.
+
+<i>O que você enviar fica registrado no sistema do escritório e é necessário para analisar o seu caso e agendar o seu atendimento. Como cuidamos dos seus dados e como pedir acesso, correção ou exclusão: [link do aviso]</i></div>
+  </div>
+  <p>Sem "ao continuar você concorda" — de propósito. Antes de ir ao ar: URL real no lugar
+    do link, o check de 650 caracteres da bancada e a rodada do golden. O disclosure de IA é
+    intocável; a linha nova só <i>acrescenta</i>.</p>
+
+  <h2><span class="num">3.</span>As quinze blindagens, em três tempos</h2>
+  <ul class="lista-fina">
+    <li><span class="nivel agora">já</span><b>Assinar o registro LGPD da sombra</b> — as 4 decisões (retenção 24m, encarregado, transferência, saudação). A sombra não suspende obrigação: o tratamento já ocorre hoje.<div class="fonte">LGPD art. 7º V e 6º X · LGPD-REGISTRO-SOMBRA.md</div></li>
+    <li><span class="nivel agora">já</span><b>Registro de operações interno</b> — controlador, operadores (OpenAI OpCo LLC/EUA e Kommo), retenção de 30 dias no monitoramento de abuso, medidas de segurança, fundamentação da transferência. O DPA da OpenAI não traz mecanismo para o Brasil (a seção 4 cobre só EEA/Suíça/UK) — a fundamentação é ônus nosso.<div class="fonte">DPA OpenAI §1.1 e §4 · openai.com/enterprise-privacy · LGPD arts. 33 e 37</div></li>
+    <li><span class="nivel agora">já</span><b>Conferir as settings de dados da organização OpenAI</b> — nenhum opt-in de compartilhamento; e se algum fluxo usar /v1/responses, mandar store:false em toda chamada (esse endpoint retém estado por 30 dias por padrão).<div class="fonte">developers.openai.com — Your data / Data controls</div></li>
+    <li><span class="nivel agora">já</span><b>Nunca mensagem fria</b> — o art. 7º V só cobre quem nos procurou; disparo frio sai da base legal e esbarra na vedação de captação da OAB.<div class="fonte">LGPD art. 7º V · Provimento 205/2021</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Publicar o aviso de privacidade e trocar a saudação</b> — a linha do art. 9º §3º + link, com golden antes de publicar.<div class="fonte">LGPD art. 9º §3º · DPA §3.1 · modelo em camadas ANPD</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Log de entrega da abertura</b> — timestamp + texto exato, por conversa, no banco que já audita tudo.<div class="fonte">LGPD art. 6º X (interpretação instrumental)</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Duas regras de fluxo novas</b> — pedido de direito do titular (art. 18) roteia a humano com prazo de 15 dias; indício de menor de idade transfere a humano.<div class="fonte">LGPD arts. 18-19 · OpenAI Services Agreement §3.3(c)</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Guardrails agora são cláusula contratual</b> — a Usage Policy de 29/10/2025 proíbe aconselhamento jurídico personalizado sem profissional habilitado e automação de decisão de alto risco sem revisão humana. Nossas travas deixam de ser só regra OAB: viram condição de uso da API. Régua do harness: 100%, inegociável.<div class="fonte">OpenAI Usage Policies 29/10/2025 (via OpenTermsArchive)</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Executar o DPA formalmente</b> e arquivar o comprovante; reabrir no navegador as páginas que os robôs de pesquisa só alcançaram por espelho (403 nas originais).<div class="fonte">DPA — cláusula de aceite · lacunas declaradas</div></li>
+    <li><span class="nivel piloto">antes do piloto</span><b>Decisão escrita do canal WhatsApp</b> — ver o aviso abaixo.<div class="fonte">lacuna declarada — frente própria a rodar</div></li>
+    <li><span class="nivel depois">depois</span><b>Pedir Zero Data Retention à OpenAI</b> — sujeito a aprovação; até lá, operar assumindo os 30 dias.<div class="fonte">developers.openai.com — Data controls</div></li>
+    <li><span class="nivel depois">depois</span><b>Assinar notificações da lista de subprocessadores</b> e registrá-los no inventário (objeção em 30 dias).<div class="fonte">DPA §2.9</div></li>
+    <li><span class="nivel depois">depois</span><b>Avaliar as cláusulas-padrão da ANPD</b> (Res. 19/2024) como reforço do art. 33.<div class="fonte">frente ainda não rodada — declarado</div></li>
+    <li><span class="nivel depois">depois</span><b>Rotina de expurgo dos 24 meses</b> — implementar antes de o primeiro dado completar o prazo.<div class="fonte">decisão 1 do registro LGPD</div></li>
+    <li><span class="nivel depois">depois</span><b>Termo de go-live</b> — o Marcus assina a saída da sombra só com golden 100%, decisão humana final e rotina do art. 18 nomeada.<div class="fonte">consolidação das frentes</div></li>
+  </ul>
+
+  <h2><span class="num">4.</span>O risco que a pesquisa não conseguiu fechar: o canal</h2>
+  <div class="aviso">
+    <b>Honestidade primeiro.</b>
+    <p>Nenhuma fonte <i>verificada</i> desta rodada cobre os termos do WhatsApp/Meta para o
+      nosso caso — tudo o que se diz sobre banimento de número em conexão por QR code é
+      interpretação, não fato com fonte. E é exatamente por isso que vira decisão formal:
+      o funil inteiro do escritório é o WhatsApp, e automação sobre conexão não-oficial
+      tipicamente expõe o número a bloqueio sem aviso nem recurso — a mesma família de
+      violação de termos de plataforma que já custou caro a este projeto em agosto.</p>
+    <p><b>Para o piloto de amanhã: pode seguir</b> — em sombra o número se comporta perante
+      a Meta exatamente como hoje, e o teste do piloto é uma conversa do próprio Marcio.
+      Mas nenhuma mensagem automática sai para <i>cliente</i> por esse canal antes de:
+      (a) rodar a frente de pesquisa Meta/Kommo, e (b) o Marcus assinar ou a migração para
+      a API oficial ou o aceite de risco com plano de contingência.</p>
+  </div>
+
+  <h2><span class="num">5.</span>O plano do piloto de amanhã, em vinte passos</h2>
+  <p>O bot responde <b>só o Marcio</b>, no WhatsApp real; o resto do mundo segue em sombra.
+    O mecanismo já existe (a lista de pilotos decide o modo quando a conversa nasce) e os
+    gates fail-closed foram provados em 02/09. O plano inteiro faz ~6 requisições espaçadas
+    ao Kommo — o limite de 4/s da lib nunca chega perto.</p>
+  <ol class="passos">
+    <li>Pré-voo: provar o estado do banco, só leitura <span class="quem-faz cl">claude</span></li>
+    <li>Pré-voo: provar o encanamento e o talk_id do canal real <span class="quem-faz cl">claude</span></li>
+    <li>Autorizar a passagem sombra → piloto restrito <span class="quem-faz mc">marcus</span></li>
+    <li>Escolher a janela do teste e avisar a equipe <span class="quem-faz ma">marcio</span></li>
+    <li>Colar as credenciais na janela do PowerShell — nunca em arquivo <span class="quem-faz ma">marcio</span></li>
+    <li>Provar o token e inventariar os campos existentes (2 GETs) <span class="quem-faz cl">claude</span></li>
+    <li>Criar os 7 campos de coleta na conta real (1 POST) <span class="quem-faz cl">claude</span></li>
+    <li>Criar os 4 campos de score + enums (1 POST) <span class="quem-faz cl">claude</span></li>
+    <li>Capturar pipeline, usuários e task_types (3 GETs) <span class="quem-faz cl">claude</span></li>
+    <li>Gravar os ids reais no banco de configuração <span class="quem-faz cl">claude</span></li>
+    <li>Varredura anti-ids-da-bancada (tem de dar zero) <span class="quem-faz cl">claude</span></li>
+    <li>Trocar a credencial do n8n para a conta real — por último, imediatamente antes do teste <span class="quem-faz ma">marcio</span></li>
+    <li>Mandar a mensagem de marcação do celular pessoal <span class="quem-faz ma">marcio</span></li>
+    <li>Adicionar o Marcio à lista de pilotos e conferir <span class="quem-faz cl">claude</span></li>
+    <li>Resetar a conversa dele — o modo nasce com a conversa <span class="quem-faz cl">claude</span></li>
+    <li>Teste de fogo: a mensagem de abertura real <span class="quem-faz ma">marcio</span></li>
+    <li>Observar o fogo em tempo real (SQL + execuções) <span class="quem-faz cl">claude</span></li>
+    <li>Confirmar no celular: a resposta chegou e declara que é IA <span class="quem-faz ma">marcio</span></li>
+    <li>Validação final da janela — SQL e o card com os olhos <span class="quem-faz cl">claude</span></li>
+    <li>Encerrar a janela e restaurar o menor privilégio <span class="quem-faz cl">claude</span></li>
+  </ol>
+  <p><b>Botão de pânico:</b> um comando, dez segundos — o kill switch cala tudo, em qualquer
+    canal e qualquer modo. Riscos mapeados com mitigação: pegar um lead real sem querer no
+    "-Ultimo" (conferir o nome antes de confirmar), atendente respondendo o teste junto com o
+    bot (sentinela de saída ainda adiada — avisar a equipe da janela), disjuntor de US$ 0,50
+    armando no meio (subir para US$ 1,00 só na janela), e o túnel efêmero (agora com watchdog
+    que o ressuscita e reaponta o webhook sozinho).</p>
+
+  <div class="metodo">
+    <p><b>Método.</b> 20 agentes em três fases: 8 frentes de pesquisa lendo fonte primária
+      (planalto.gov.br, ANPD, DPA e políticas da OpenAI — quando o site bloqueou robôs, por
+      espelho OpenTermsArchive/Wayback com a ressalva declarada —, análises jurídicas
+      convergentes), cada citação reaberta e conferida por um verificador independente, e
+      dois juristas adversariais (proteção máxima × pragmático) antes da síntese. A frente
+      de benchmark de mercado foi <b>refutada</b> pelo verificador e seus exemplos são
+      ilustração, não fonte. Lacunas declaradas: termos Meta/Kommo (frente própria a rodar),
+      Res. CD/ANPD 19/2024, CDC art. 46. Número que não aguenta a pergunta "de onde veio?"
+      não sustenta decisão.</p>
+  </div>
+
+</div>
+</body>
+</html>

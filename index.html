@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Pesquisas FARIA</title>
+<style>
+  :root{
+    --fundo:#FAFAF7; --tinta:#20261F; --tinta2:#5A6157; --tinta3:#8A9086;
+    --borda:#E3E5DC; --borda2:#CDD1C4;
+    --lima:#5F7A00; --lima-fundo:#EFF5D8;
+    --violeta:#6D4AFF; --magenta:#B4266E; --magenta-fundo:#FBE7F1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+      --borda:#2C3431; --borda2:#3A423E;
+      --lima:#C6F135; --lima-fundo:#232B14;
+      --violeta:#A18FFF; --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+    --borda:#2C3431; --borda2:#3A423E;
+    --lima:#C6F135; --lima-fundo:#232B14;
+    --violeta:#A18FFF; --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+  }
+  body{background:var(--fundo);color:var(--tinta);margin:0;
+    font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:15.5px;line-height:1.6}
+  .pagina{max-width:820px;margin:0 auto;padding:44px 20px 80px}
+  .selo{font-size:.66rem;text-transform:uppercase;letter-spacing:.18em;color:var(--tinta3);margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.1;margin:0 0 10px;letter-spacing:-.015em}
+  .lede{color:var(--tinta2);max-width:60ch;margin:0 0 34px}
+  h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--tinta3);
+    font-weight:600;margin:38px 0 4px}
+  .item{display:block;text-decoration:none;color:inherit;border-top:1px solid var(--borda);
+    padding:15px 2px 15px 0;transition:background .15s}
+  .item:last-of-type{border-bottom:1px solid var(--borda)}
+  .item:hover{background:var(--lima-fundo)}
+  .item .linha1{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .item time{font-size:.7rem;color:var(--tinta3);font-variant-numeric:tabular-nums;
+    letter-spacing:.06em;flex:0 0 auto;min-width:76px}
+  .item .titulo{font-weight:600;letter-spacing:-.005em}
+  .item .resumo{font-size:.85rem;color:var(--tinta2);margin:3px 0 0 88px;max-width:60ch}
+  .item .marca{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;
+    padding:2px 8px;border-radius:999px;flex:0 0 auto}
+  .marca.novo{background:var(--lima-fundo);color:var(--lima)}
+  .marca.draft{background:var(--magenta-fundo);color:var(--magenta)}
+  .marca.fora{border:1px solid var(--borda2);color:var(--tinta3)}
+  .anexo{font-size:.72rem;margin:2px 0 0 88px}
+  .anexo a{color:var(--violeta)}
+  .rodape{margin-top:48px;padding-top:14px;border-top:1px solid var(--borda2);
+    font-size:.78rem;color:var(--tinta3);max-width:70ch}
+  @media (max-width:560px){
+    .item .resumo,.anexo{margin-left:0}
+  }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <p class="selo">FARIA · Grupo Faria · Dourados-MS</p>
+  <h1>Pesquisas</h1>
+  <p class="lede">Dossiês e relatórios produzidos durante a construção do FARIA — cada um
+    com método declarado, fontes verificadas e as lacunas ditas em voz alta. O diário do
+    projeto vive em <a href="https://faria-painel.vercel.app" style="color:var(--violeta)">faria-painel.vercel.app</a>.</p>
+
+  <h2>Compliance e regulação</h2>
+  <a class="item" href="dossie-legal.html">
+    <span class="linha1"><time>03 set 26</time><span class="titulo">O que a lei manda o robô dizer — e o que ela não manda</span><span class="marca novo">novo</span></span>
+    <span class="resumo">O chatbot precisa do "ao continuar você concorda" do iFood? Vinte agentes leram OpenAI, LGPD, ANPD e OAB na fonte. Resposta: não — e o que fazer no lugar.</span>
+  </a>
+  <a class="item" href="aviso-privacidade-DRAFT.html">
+    <span class="linha1"><time>03 set 26</time><span class="titulo">Aviso de Privacidade do atendimento</span><span class="marca draft">rascunho</span></span>
+    <span class="resumo">A camada 2 do modelo ANPD, em uma página — aguarda aprovação do Marcus antes de ganhar URL definitiva.</span>
+  </a>
+  <a class="item" href="ia-e-transparencia.html">
+    <span class="linha1"><time>22 ago 26</time><span class="titulo">IA e transparência</span></span>
+    <span class="resumo">Por que o agente precisa dizer que é uma IA — o fundamento que virou trava inegociável do projeto.</span>
+  </a>
+
+  <h2>Diagnóstico</h2>
+  <a class="item" href="https://faria-diagnostico.vercel.app" target="_blank" rel="noopener">
+    <span class="linha1"><time>02 set 26</time><span class="titulo">O CRM que ninguém lê</span><span class="marca fora">site próprio</span></span>
+    <span class="resumo">A leitura completa da conta real do Kommo: 15.247 leads, 3 segundos que eram 10,6 horas, e a porta que fecha às 18h — 126 medições, 3 céticos por número.</span>
+  </a>
+
+  <h2>Testes do agente</h2>
+  <a class="item" href="2026-08-18-auditoria-treino-time.html">
+    <span class="linha1"><time>18 ago 26</time><span class="titulo">Auditoria do treino do time</span></span>
+    <span class="resumo">A tarde em que três pessoas tentaram quebrar a IA — dezesseis conversas avaliadas uma a uma, nota 6,0 publicada de propósito.</span>
+  </a>
+  <a class="item" href="2026-08-15-v2-aprovada.html">
+    <span class="linha1"><time>15 ago 26</time><span class="titulo">V2 humanizada — aprovada</span></span>
+    <span class="resumo">A rodada que aprovou o tom de conversa do agente.</span>
+    <span class="anexo"><a href="2026-08-15-v2-aprovada.pdf">versão em PDF ↓</a></span>
+  </a>
+  <a class="item" href="2026-08-14-baseline-teste-marcus.html">
+    <span class="linha1"><time>14 ago 26</time><span class="titulo">Baseline — teste do Marcus</span></span>
+    <span class="resumo">O primeiro relatório de conversa: a régua contra a qual tudo depois foi medido.</span>
+    <span class="anexo"><a href="2026-08-14-baseline-teste-marcus.pdf">versão em PDF ↓</a></span>
+  </a>
+
+  <p class="rodape">Página de trabalho do projeto — conteúdo técnico e interno, publicado
+    pelo princípio da transparência do FARIA. Número que não aguenta a pergunta
+    "de onde veio?" não sustenta decisão.</p>
+</div>
+</body>
+</html>

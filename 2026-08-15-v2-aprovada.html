@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FARIA — V2 Humanizada APROVADA · 15/08</title>
+<style>
+  @font-face{font-family:"Anthropic Sans";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/text-regular.otf") format("opentype");font-weight:400;font-display:swap}
+  @font-face{font-family:"Anthropic Sans";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/text-semibold.otf") format("opentype");font-weight:600;font-display:swap}
+  @font-face{font-family:"Anthropic Sans Display";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/display-bold.otf") format("opentype");font-weight:700;font-display:swap}
+  :root{--grafite:#171C1A;--papel:#FAFAFA;--lima:#C6F135;--violeta:#8E71FF;--magenta:#F472B6;
+    --bg2:#1F2523;--bg3:#262D2A;--line:#2C3431;--line2:#3A423E;--t2:#A8B2AD;--t3:#6E7873}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--grafite);color:var(--papel);
+    font-family:"Anthropic Sans",-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.55}
+  .pagina{max-width:960px;margin:0 auto;padding:34px 26px 50px}
+  header{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line2);padding-bottom:18px;margin-bottom:22px;flex-wrap:wrap}
+  .roundel{width:44px;height:44px;flex:0 0 auto}
+  header h1{font-family:"Anthropic Sans Display";font-weight:700;font-size:1.3rem;margin:0;letter-spacing:-.01em}
+  header .sub{color:var(--t3);font-size:.78rem;margin-top:2px}
+  .selo{margin-left:auto;background:color-mix(in srgb,var(--lima) 16%,transparent);border:1px solid var(--lima);
+    color:var(--lima);font-weight:700;font-size:.9rem;letter-spacing:.08em;padding:9px 20px;border-radius:999px}
+  h2{font-size:.68rem;text-transform:uppercase;letter-spacing:.15em;color:var(--t3);margin:26px 0 10px}
+  .grid{display:grid;gap:10px}
+  .g5{grid-template-columns:repeat(5,1fr)}
+  @media(max-width:760px){.g5{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:13px 15px}
+  .kpi .n{font-family:"Anthropic Sans Display";font-weight:700;font-size:1.45rem;line-height:1.1}
+  .kpi .r{font-size:.66rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+  .kpi.lima .n{color:var(--lima)} .kpi.vio .n{color:var(--violeta)}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line2)}
+  td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  td.antes{color:var(--t2)} td.depois{color:var(--papel)}
+  td.depois b{color:var(--lima)}
+  .lista{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;
+    columns:2;column-gap:26px;font-size:.82rem;color:var(--t2)}
+  @media(max-width:700px){.lista{columns:1}}
+  .lista div{break-inside:avoid;padding:4px 0}
+  .lista b{color:var(--papel)}
+  .rodada{display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums;
+    font-family:"Anthropic Sans Display";font-weight:700;font-size:1.3rem;flex-wrap:wrap}
+  .rodada span{color:var(--t3)} .rodada .fim{color:var(--lima);font-size:1.7rem}
+  .rodada .seta{color:var(--line2);font-size:1rem}
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:12px;font-size:.68rem;color:var(--t3);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @page{size:A4;margin:0}
+  @media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    body{background:var(--grafite)} .kpi,.lista,table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <header>
+    <svg class="roundel" viewBox="0 0 336.57 332.8" aria-hidden="true">
+      <path fill="#FAFAFA" d="M336.3,166.39c-5.28,94.08-63.56,154.29-156.35,165.45C88.32,342.86,18.23,257.25,2.11,166.39-14.06,75.23,64.77,7.55,165.32.49c108.05-7.59,176.15,73.76,170.98,165.9Z"/>
+      <path fill="#171C1A" d="M108.01,155.34v-23.99h57.14l-8.2-21.88h-72.81v113.54h23.87v-45.72h43.02l-.1-.26-8.12-21.69h-34.8Z"/>
+      <path fill="#171C1A" d="M201.71,109.47h-24.77l12.11,28.45.03-.09,16.01,37.69h-.04l20.36,47.81h27.02l-50.72-113.85Z"/>
+    </svg>
+    <div>
+      <h1>Agente v2 — atendimento humanizado</h1>
+      <div class="sub">Construída na noite de 14→15/08 a partir da spec do Marcus · provada no golden set</div>
+    </div>
+    <div class="selo">✓ APROVADA</div>
+  </header>
+
+  <div class="grid g5">
+    <div class="kpi lima"><div class="n">100%</div><div class="r">guardrails (0 violações em 47 casos)</div></div>
+    <div class="kpi lima"><div class="n">100%</div><div class="r">classificação (43/43)</div></div>
+    <div class="kpi lima"><div class="n">97,2%</div><div class="r">extração (208/214 campos)</div></div>
+    <div class="kpi"><div class="n">~6s</div><div class="r">resposta (1 chamada/turno)</div></div>
+    <div class="kpi vio"><div class="n">US$ 4,20</div><div class="r">custo das 6 rodadas de prova</div></div>
+  </div>
+
+  <h2>A prova — 6 rodadas na madrugada, cada uma comprada com diagnóstico de transcript</h2>
+  <div class="rodada">13 <span class="seta">→</span> 20 <span class="seta">→</span> 28 <span class="seta">→</span> 36 <span class="seta">→</span> 39 <span class="seta">→</span> <span class="fim">41/47 ✓</span>
+    <span style="font-size:.72rem;font-family:'Anthropic Sans';font-weight:400">47 cenários · 14 novos escritos pra v2 · guardrails com tolerância ZERO</span></div>
+
+  <h2>O mesmo teste do Marcus — antes e depois (o áudio-bomba: "10 parcelas, leilão dia 20, devo 400 mil...")</h2>
+  <table>
+    <tr><th style="width:33%">Quinta (baseline v1)</th><th>Hoje (v2)</th></tr>
+    <tr><td class="antes">Handoff imediato — o modelo nunca leu o áudio</td>
+        <td class="depois"><b>Conversa viva</b>: urgência vira sinal, acolhe em 1 frase e continua coletando</td></tr>
+    <tr><td class="antes">0 de 7 campos no card</td>
+        <td class="depois"><b>6 campos numa chamada só</b> — incluindo a dívida total e a data do leilão <b>normalizada (2026-08-20)</b></td></tr>
+    <tr><td class="antes">"Uma pessoa da equipe assume seu atendimento"</td>
+        <td class="depois">"Como posso te chamar? E qual é o banco?" — <b>conversa de gente</b>, tarefa tier A criada em paralelo sem parar nada</td></tr>
+    <tr><td class="antes">Closer recebia conversa crua</td>
+        <td class="depois"><b>Nota-resumo pronta no card</b>: QUEM · CASO · DINHEIRO · CAPACIDADE · URGÊNCIA · COMO ABORDAR</td></tr>
+  </table>
+
+  <h2>O que nasceu nesta versão (spec do Marcus, 14/08)</h2>
+  <div class="lista">
+    <div><b>Persona humana</b> — juiz experiente, não interrogatório; pergunta aberta, acolhimento ancorado no que o lead disse</div>
+    <div><b>Pergunta de ouro</b> — "se a gente conseguir um bom acordo, quantas parcelas você conseguiria quitar?" (literal, protegida por regex de conjugação)</div>
+    <div><b>Urgência não atalha</b> — coleta completa; teto de 3 turnos se não render; tarefa automática pro plantão no 1º sinal</div>
+    <div><b>Desespero acolhe-e-segue</b> — escalada determinística; autolesão intocável (CVV 188, prioridade máxima)</div>
+    <div><b>Fechamento invisível</b> — sem "vou te transferir"; o bot segue até o closer assumir</div>
+    <div><b>10 campos</b> — + nome, data do leilão (normalizada pra data real) e dívida total</div>
+    <div><b>Pedir foto do documento</b> — 1x, só o que está à mão; o bot lê e extrai</div>
+    <div><b>Zero dinheiro na voz do bot</b> — nem por extenso, nem em correção; confirmação por nome de campo</div>
+  </div>
+
+  <footer>
+    <span><b style="color:var(--t2)">FARIA</b> · prompt v3.5 · regex v3.0 · score v2 · dados 100% de teste</span>
+    <span>pendentes de sábado: aceite de tom do Marcus · aval do deflete-e-segue no preço</span>
+  </footer>
+</div>
+</body>
+</html>

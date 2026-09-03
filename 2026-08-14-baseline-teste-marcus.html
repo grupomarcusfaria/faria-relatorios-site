@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FARIA — Relatório de conversa · Baseline 14/08</title>
+<style>
+  @font-face{font-family:"Anthropic Sans";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/text-regular.otf") format("opentype");font-weight:400;font-display:swap}
+  @font-face{font-family:"Anthropic Sans";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/text-semibold.otf") format("opentype");font-weight:600;font-display:swap}
+  @font-face{font-family:"Anthropic Sans Display";src:url("https://oyubhimyeycfvbhpnqwk.supabase.co/storage/v1/object/public/assets/fonts/display-bold.otf") format("opentype");font-weight:700;font-display:swap}
+  :root{--grafite:#171C1A;--papel:#FAFAFA;--lima:#C6F135;--violeta:#8E71FF;--magenta:#F472B6;
+    --bg2:#1F2523;--bg3:#262D2A;--line:#2C3431;--line2:#3A423E;--t2:#A8B2AD;--t3:#6E7873}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--grafite);color:var(--papel);
+    font-family:"Anthropic Sans",-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.55}
+  .pagina{max-width:960px;margin:0 auto;padding:34px 26px 50px}
+
+  header{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line2);padding-bottom:18px;margin-bottom:22px;flex-wrap:wrap}
+  .roundel{width:44px;height:44px;flex:0 0 auto}
+  header h1{font-family:"Anthropic Sans Display";font-weight:700;font-size:1.35rem;margin:0;letter-spacing:-.01em}
+  header .sub{color:var(--t3);font-size:.78rem;margin-top:2px}
+  .carimbo{margin-left:auto;text-align:right;font-size:.7rem;color:var(--t3);line-height:1.5}
+  .carimbo b{color:var(--lima);font-size:.78rem;letter-spacing:.08em}
+
+  h2{font-size:.68rem;text-transform:uppercase;letter-spacing:.15em;color:var(--t3);margin:26px 0 10px}
+  .grid{display:grid;gap:10px}
+  .g5{grid-template-columns:repeat(5,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:760px){.g5{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}}
+
+  .kpi{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:13px 15px}
+  .kpi .n{font-family:"Anthropic Sans Display";font-weight:700;font-size:1.5rem;line-height:1.1}
+  .kpi .r{font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+  .kpi.lima .n{color:var(--lima)} .kpi.mag .n{color:var(--magenta)} .kpi.vio .n{color:var(--violeta)}
+
+  .fluxo{border-left:2px solid var(--line2);margin-left:9px;padding-left:20px;display:flex;flex-direction:column;gap:12px}
+  .passo{position:relative;background:var(--bg2);border:1px solid var(--line2);border-radius:11px;padding:11px 15px}
+  .passo::before{content:"";position:absolute;left:-26px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--line2)}
+  .passo.ia::before{background:var(--violeta)} .passo.regex::before{background:var(--magenta)} .passo.acao::before{background:var(--lima)}
+  .passo .t{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .passo .hora{font-size:.72rem;color:var(--t3);font-variant-numeric:tabular-nums;min-width:60px}
+  .passo .tit{font-weight:600;font-size:.88rem}
+  .passo .tec{margin-left:auto;font-size:.66rem;color:var(--t2);background:var(--bg3);border-radius:999px;padding:2px 10px;white-space:nowrap}
+  .passo .d{color:var(--t2);font-size:.8rem;margin-top:4px}
+
+  .transcricao{background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--violeta);
+    border-radius:12px;padding:16px 18px;font-size:.88rem;color:var(--papel);line-height:1.65}
+  .transcricao .meta{color:var(--t3);font-size:.7rem;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+
+  .modelo{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px}
+  .modelo b{font-size:.9rem}
+  .modelo .papel-m{font-size:.66rem;color:var(--lima);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+  .modelo .specs{color:var(--t2);font-size:.76rem;margin-top:7px;line-height:1.7;font-variant-numeric:tabular-nums}
+
+  .score-wrap{display:grid;grid-template-columns:190px 1fr;gap:16px;background:var(--bg2);
+    border:1px solid var(--line2);border-radius:12px;padding:16px}
+  @media(max-width:640px){.score-wrap{grid-template-columns:1fr}}
+  .score-big{text-align:center;align-self:center}
+  .score-big .n{font-family:"Anthropic Sans Display";font-weight:700;font-size:3.4rem;line-height:1}
+  .score-big .tier{display:inline-block;margin-top:8px;background:color-mix(in srgb,var(--magenta) 20%,transparent);
+    color:var(--magenta);font-weight:700;font-size:.72rem;letter-spacing:.06em;padding:3px 12px;border-radius:999px}
+  .score-big .ov{font-size:.66rem;color:var(--t3);margin-top:7px;line-height:1.5}
+  .dim{display:grid;grid-template-columns:150px 1fr 34px;gap:9px;align-items:center;font-size:.75rem;color:var(--t2);padding:2px 0}
+  .dim .bar{height:6px;border-radius:999px;background:var(--bg3);overflow:hidden}
+  .dim .bar i{display:block;height:100%;background:var(--lima)}
+  .dim .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--papel)}
+
+  .lacuna{background:color-mix(in srgb,var(--magenta) 9%,var(--bg2));border:1px solid color-mix(in srgb,var(--magenta) 45%,transparent);
+    border-radius:12px;padding:16px 18px}
+  .lacuna h3{margin:0 0 8px;font-size:.95rem;color:var(--magenta)}
+  .lacuna p{margin:0 0 8px;font-size:.83rem;color:var(--papel)}
+  .lacuna ul{margin:6px 0 0;padding-left:20px;font-size:.8rem;color:var(--t2);line-height:1.8}
+  .lacuna .alvo{margin-top:10px;font-size:.78rem;color:var(--lima)}
+
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:12px;font-size:.68rem;color:var(--t3);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  /* impressão/PDF: mantém o grafite e as cores exatamente como na tela */
+  @page{size:A4;margin:0}
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    body{background:var(--grafite)}
+    .passo,.kpi,.modelo,.score-wrap,.transcricao,.lacuna{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+  <header>
+    <svg class="roundel" viewBox="0 0 336.57 332.8" aria-hidden="true">
+      <path fill="#FAFAFA" d="M336.3,166.39c-5.28,94.08-63.56,154.29-156.35,165.45C88.32,342.86,18.23,257.25,2.11,166.39-14.06,75.23,64.77,7.55,165.32.49c108.05-7.59,176.15,73.76,170.98,165.9Z"/>
+      <path fill="#171C1A" d="M108.01,155.34v-23.99h57.14l-8.2-21.88h-72.81v113.54h23.87v-45.72h43.02l-.1-.26-8.12-21.69h-34.8Z"/>
+      <path fill="#171C1A" d="M201.71,109.47h-24.77l12.11,28.45.03-.09,16.01,37.69h-.04l20.36,47.81h27.02l-50.72-113.85Z"/>
+    </svg>
+    <div>
+      <h1>Relatório de conversa — teste real por WhatsApp</h1>
+      <div class="sub">Lead de teste (Marcus) · bancada FARIA · 14/08/2026, 18:38–18:40 · fuso de Campo Grande</div>
+    </div>
+    <div class="carimbo"><b>BASELINE · PRÉ-v2</b><br>prompt v2.2 · regex v2.3 · pesos v1<br>para comparação com a próxima versão</div>
+  </header>
+
+  <div class="grid g5">
+    <div class="kpi lima"><div class="n">US$ 0,013</div><div class="r">custo total da conversa (≈ R$ 0,07)</div></div>
+    <div class="kpi"><div class="n">2 áudios</div><div class="r">transcritos (10s + 58s)</div></div>
+    <div class="kpi"><div class="n">7s / 4s</div><div class="r">tempo de resposta por turno</div></div>
+    <div class="kpi mag"><div class="n">0 / 7</div><div class="r">campos estruturados no card</div></div>
+    <div class="kpi vio"><div class="n">24 → A</div><div class="r">score → tier (override urgência)</div></div>
+  </div>
+
+  <h2>Como aconteceu — o caminho de cada mensagem</h2>
+  <div class="fluxo">
+    <div class="passo ia">
+      <div class="t"><span class="hora">18:38:26</span><span class="tit">Lead manda o 1º áudio (~10s)</span><span class="tec">OpenAI gpt-4o-mini-transcribe</span></div>
+      <div class="d">Transcrito em segundos: <i>"Oi, boa noite. Eu vi o anúncio de vocês na internet que vocês salvam imóveis do leilão. Preciso de ajuda."</i> — 98 tokens de áudio.</div>
+    </div>
+    <div class="passo ia">
+      <div class="t"><span class="hora">18:38:33</span><span class="tit">Bot responde: saudação + LGPD</span><span class="tec">Claude Haiku 4.5 · 2,6s de inferência</span></div>
+      <div class="d">Resposta ponta a ponta em 7s (debounce adaptativo 2s + modelo + envio). 519 tokens lidos · 125 escritos · US$ 0,0094.</div>
+    </div>
+    <div class="passo ia">
+      <div class="t"><span class="hora">18:39:48</span><span class="tit">Lead manda o áudio principal (~58s)</span><span class="tec">OpenAI gpt-4o-mini-transcribe</span></div>
+      <div class="d">História completa transcrita palavra por palavra (íntegra abaixo) — 578 tokens de áudio · US$ 0,0027.</div>
+    </div>
+    <div class="passo regex">
+      <div class="t"><span class="hora">18:39:52</span><span class="tit">Rede de urgência dispara → entrega pra equipe</span><span class="tec">Regex determinística · SEM IA · 4s</span></div>
+      <div class="d">"Intimação + leilão" acionou o gatilho <b>urgencia_leilao</b>: resposta-template imediata ("casos de LEILÃO AGENDADO têm prioridade"), trava de silêncio ativada. Velocidade priorizada — o modelo não participou deste turno.</div>
+    </div>
+    <div class="passo acao">
+      <div class="t"><span class="hora">18:39:53</span><span class="tit">Bastidores: score no card + tarefa automática</span><span class="tec">Postgres + Kommo REST v4</span></div>
+      <div class="d">Score/Tier/Sinais gravados no card do lead. Como chegou <b>fora do expediente</b> com tier A, nasceu sozinha a <b>tarefa Kommo #757512</b> — "ligar até segunda 17/08, 08:30".</div>
+    </div>
+  </div>
+
+  <h2>A transcrição do áudio de 58 segundos (na íntegra)</h2>
+  <div class="transcricao">
+    "Então, hoje eu cheguei em casa e eu fui surpreendido com o rapaz do cartório com uma notificação dizendo
+    que minha casa vai pro leilão. Só gente que tá desesperado. Vi que o leilão já vai ser agora, dia 20.
+    Eu nunca recebi nada, o banco nunca me procurou, nunca mandou nada. E agora eu estou sendo surpreendido
+    com isso. Eu confesso que eu devo umas parcelas, tem umas parcelas em atraso, meu marido ficou desempregado,
+    a gente passou por um problema de saúde, mas agora negociando com o banco, o banco não quer receber as
+    parcelas. Então eu não consigo entrar no sistema pra pagar o boleto. Agora chegou aqui que minha casa vai
+    para o leilão, que eu devo mais de 400 mil reais, e que meu imóvel vai ser leiloado por valor de 300 mil
+    e a casa vale 600. Eu preciso de ajuda."
+    <div class="meta">Transcrito por OpenAI <b>gpt-4o-mini-transcribe</b> · 578 tokens de áudio + 193 de texto · custo US$ 0,0027 · o arquivo chega da Kommo como ".ogg" mas é M4A — a extensão real é detectada pelos bytes antes do envio</div>
+  </div>
+
+  <h2>As redes neurais desta conversa</h2>
+  <div class="grid g3">
+    <div class="modelo">
+      <div class="papel-m">O cérebro — decide e escreve</div>
+      <b>Claude Haiku 4.5</b> <span style="color:var(--t3);font-size:.72rem">· Anthropic</span>
+      <div class="specs">id: claude-haiku-4-5-20251001<br>1 chamada neste teste (turno 1)<br>519 tokens lidos · 125 escritos<br>latência: 2.645 ms · US$ 0,0094<br>escolhido p/ dado real: DPA + custo</div>
+    </div>
+    <div class="modelo">
+      <div class="papel-m">O ouvido — transcreve áudio</div>
+      <b>GPT-4o mini Transcribe</b> <span style="color:var(--t3);font-size:.72rem">· OpenAI</span>
+      <div class="specs">2 áudios · 676 tokens de áudio (~68s)<br>custo total: US$ 0,0031<br>português nativo, pontuação correta<br>(o olho — visão de fotos — é o próprio Claude, não usado neste teste)</div>
+    </div>
+    <div class="modelo">
+      <div class="papel-m">As travas — sem IA, por construção</div>
+      <b>Pós-processador regex v2.3</b>
+      <div class="specs">35 regras determinísticas<br>0 violações nesta conversa<br>1 gatilho de entrada: urgencia_leilao<br>preço/parecer/promessa: bloqueio físico<br>aprovado no golden set: 35 cenários</div>
+    </div>
+  </div>
+
+  <h2>Score do lead (interno — closers)</h2>
+  <div class="score-wrap">
+    <div class="score-big">
+      <div class="n">24<span style="font-size:1rem;color:var(--t3)">/100</span></div>
+      <div class="tier">TIER A · ANALISAR JÁ</div>
+      <div class="ov">urgência real FURA o score:<br>handoff de urgência força tier A<br>independente do número</div>
+    </div>
+    <div>
+      <div class="dim"><span>situação</span><span class="bar"><i style="width:20%"></i></span><span class="v">5</span></div>
+      <div class="dim"><span>urgência</span><span class="bar"><i style="width:100%"></i></span><span class="v">15</span></div>
+      <div class="dim"><span>engajamento</span><span class="bar"><i style="width:27%"></i></span><span class="v">4</span></div>
+      <div class="dim"><span>completude</span><span class="bar"><i style="width:0%"></i></span><span class="v">0</span></div>
+      <div class="dim"><span>organização financeira</span><span class="bar"><i style="width:0%"></i></span><span class="v">0</span></div>
+      <div class="dim"><span>valor do imóvel</span><span class="bar"><i style="width:0%"></i></span><span class="v">0</span></div>
+      <div class="dim"><span>atraso recuperável</span><span class="bar"><i style="width:0%"></i></span><span class="v">0</span></div>
+      <div style="font-size:.72rem;color:var(--t3);margin-top:8px">etiquetas: chegou fora do expediente · conversa entregue à equipe (trava ativa)</div>
+    </div>
+  </div>
+
+  <h2>A lacuna que esta baseline registra</h2>
+  <div class="lacuna">
+    <h3>0 de 7 campos estruturados — e o áudio continha quase todos</h3>
+    <p>O atalho de urgência respondeu <b>antes</b> do modelo ler a transcrição (velocidade priorizada por desenho).
+       Resultado: o card recebeu score e tier, mas os dados ficaram só no texto da conversa. O que estava no áudio e NÃO virou campo:</p>
+    <ul>
+      <li><b>Notificação recebida:</b> sim — do cartório, em mãos</li>
+      <li><b>Data do leilão:</b> dia 20 (6 dias!)</li>
+      <li><b>Parcelas em atraso:</b> "umas parcelas" (banco recusa receber)</li>
+      <li><b>Dívida:</b> mais de R$ 400 mil · <b>imóvel:</b> avaliado em R$ 600 mil (leilão por 300)</li>
+      <li><b>Organização financeira:</b> marido desempregado, problema de saúde, tentando negociar</li>
+    </ul>
+    <div class="alvo">→ Alvo da próxima versão: nenhum dado falado pelo lead fica fora do card — em qualquer ordem de conversa, com urgência ou sem.</div>
+  </div>
+
+  <footer>
+    <span><b style="color:var(--t2)">FARIA</b> · bancada Kommo (trial) · dados 100% de teste — nenhum cliente real</span>
+    <span>gerado em 14/08/2026 · comparativo oficial para a construção da v2</span>
+  </footer>
+</div>
+</body>
+</html>

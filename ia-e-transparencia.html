@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>IA e transparência</title>
+<style>
+  :root{
+    --fundo:#FAFAF7; --tinta:#20261F; --tinta2:#5A6157; --tinta3:#8A9086;
+    --superficie:#FFFFFF; --borda:#E3E5DC; --borda2:#CDD1C4;
+    --lima:#5F7A00; --lima-viva:#7A9C00; --lima-fundo:#EFF5D8;
+    --violeta:#6D4AFF; --violeta-fundo:#EEEAFF;
+    --magenta:#B4266E; --magenta-fundo:#FBE7F1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+      --superficie:#1F2523; --borda:#2C3431; --borda2:#3A423E;
+      --lima:#C6F135; --lima-viva:#C6F135; --lima-fundo:#232B14;
+      --violeta:#A18FFF; --violeta-fundo:#241F3D;
+      --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --fundo:#171C1A; --tinta:#F2F4EF; --tinta2:#A8B2AD; --tinta3:#6E7873;
+    --superficie:#1F2523; --borda:#2C3431; --borda2:#3A423E;
+    --lima:#C6F135; --lima-viva:#C6F135; --lima-fundo:#232B14;
+    --violeta:#A18FFF; --violeta-fundo:#241F3D;
+    --magenta:#F472B6; --magenta-fundo:#3A1E2D;
+  }
+  body{background:var(--fundo);color:var(--tinta);margin:0;
+    font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:15.5px;line-height:1.6}
+  .pagina{max-width:900px;margin:0 auto;padding:38px 20px 70px}
+  .selo{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--tinta3);margin-bottom:8px}
+  h1{font-size:1.85rem;line-height:1.15;margin:0 0 8px;text-wrap:balance;letter-spacing:-.01em}
+  .lede{color:var(--tinta2);max-width:64ch;margin:0 0 22px}
+  h2{font-size:1.15rem;margin:44px 0 10px;letter-spacing:-.01em}
+  h2 .num{color:var(--tinta3);font-weight:400;margin-right:6px}
+  h3{font-size:.95rem;margin:26px 0 6px;letter-spacing:-.005em}
+  p{max-width:70ch;margin:8px 0}
+  li{max-width:68ch;margin:6px 0}
+  a{color:var(--violeta)}
+
+  .veredito{border-left:5px solid var(--lima);background:var(--lima-fundo);border-radius:0 12px 12px 0;
+    padding:16px 20px;margin:20px 0}
+  .veredito .txt{max-width:66ch}
+  .veredito b.sim{color:var(--lima)}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:9px;margin:16px 0}
+  .tile{background:var(--superficie);border:1px solid var(--borda);border-radius:11px;padding:11px 13px}
+  .tile .n{font-weight:800;font-size:1.45rem;line-height:1.15;font-variant-numeric:tabular-nums}
+  .tile .l{font-size:.68rem;color:var(--tinta2);margin-top:2px}
+
+  .aviso{border-left:4px solid var(--magenta);background:var(--magenta-fundo);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0}
+  .aviso b:first-child{color:var(--magenta)}
+  .aviso p{margin:6px 0}
+
+  .bom{border-left:4px solid var(--lima);background:var(--lima-fundo);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0}
+  .bom b:first-child{color:var(--lima)}
+  .bom p{margin:6px 0}
+
+  .nota-rigor{border-left:4px solid var(--violeta);background:var(--violeta-fundo);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.9rem}
+  .nota-rigor b:first-child{color:var(--violeta)}
+  .nota-rigor p{margin:6px 0}
+
+  .norma{background:var(--superficie);border:1px solid var(--borda);border-radius:12px;
+    padding:14px 17px;margin:14px 0}
+  .norma .cab{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:3px}
+  .norma .cab .id{font-weight:700;font-size:.92rem}
+  .norma .disp{font-size:.72rem;color:var(--tinta3);margin-bottom:9px}
+  .norma blockquote{margin:0 0 9px;padding:8px 0 8px 13px;border-left:3px solid var(--borda2);
+    font-size:.88rem;color:var(--tinta);white-space:pre-line}
+  .norma blockquote.en{font-style:italic}
+  .norma .trad{font-size:.83rem;color:var(--tinta2);margin:-4px 0 9px;padding-left:13px;border-left:3px solid var(--borda)}
+  .norma .leitura{font-size:.9rem;margin:0}
+  .norma .leitura b{color:var(--tinta)}
+
+  .chip{display:inline-block;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:2px 8px;border-radius:999px;background:var(--borda);color:var(--tinta2);white-space:nowrap}
+  .chip.vig{background:var(--lima-fundo);color:var(--lima)}
+  .chip.proj{background:var(--violeta-fundo);color:var(--violeta)}
+  .chip.contr{background:var(--magenta-fundo);color:var(--magenta)}
+  .chip.nao{background:var(--borda);color:var(--tinta3)}
+
+  .rolagem{overflow-x:auto;margin:12px 0}
+  table{border-collapse:collapse;width:100%;font-size:.82rem}
+  th{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta3);text-align:left;
+    padding:6px 9px;border-bottom:2px solid var(--borda2);white-space:nowrap}
+  td{padding:7px 9px;border-bottom:1px solid var(--borda);vertical-align:top}
+  td.num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  td.nome{font-weight:600}
+
+  .linha-tempo{margin:16px 0;border-left:2px solid var(--borda2);padding-left:0}
+  .ev{position:relative;padding:0 0 16px 22px;margin-left:0}
+  .ev::before{content:"";position:absolute;left:-7px;top:7px;width:11px;height:11px;border-radius:50%;
+    background:var(--tinta3);border:2px solid var(--fundo)}
+  .ev.ruim::before{background:var(--magenta)}
+  .ev.boa::before{background:var(--lima-viva)}
+  .ev .quando{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta3)}
+  .ev .oque{font-size:.92rem;margin:2px 0 0;max-width:66ch}
+  .ev .oque b{display:block}
+
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  @media (max-width:640px){.par{grid-template-columns:1fr}}
+  .cartao{background:var(--superficie);border:1px solid var(--borda);border-radius:12px;padding:14px 16px}
+  .cartao .rot{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta3);margin-bottom:7px}
+  .cartao.antes{border-color:var(--borda2)}
+  .cartao.antes .rot{color:var(--magenta)}
+  .cartao.depois{border-color:var(--lima-viva)}
+  .cartao.depois .rot{color:var(--lima)}
+  .cartao .msg{font-size:.9rem;line-height:1.55;margin:0 0 8px;max-width:none}
+  .cartao .comenta{font-size:.76rem;color:var(--tinta2);margin:0;max-width:none}
+
+  .cit{border-left:3px solid var(--borda2);padding:8px 14px;margin:12px 0;font-size:.92rem}
+  .cit.boa{border-left-color:var(--lima)}
+  .cit.ruim{border-left-color:var(--magenta)}
+  .cit .fala{font-style:italic}
+  .cit .quem{font-size:.72rem;color:var(--tinta3);margin-top:4px}
+
+  .rec{counter-reset:rec;padding-left:0}
+  .rec li{list-style:none;position:relative;padding-left:34px;margin:12px 0}
+  .rec li::before{counter-increment:rec;content:counter(rec);position:absolute;left:0;top:1px;
+    width:23px;height:23px;border-radius:50%;background:var(--tinta);color:var(--fundo);
+    display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800}
+
+  .fontes{font-size:.78rem;color:var(--tinta2);margin-top:14px}
+  .fontes h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta3);margin:18px 0 5px}
+  .fontes ul{padding-left:18px;margin:4px 0}
+  .fontes li{margin:3px 0;max-width:78ch}
+  .fontes a{word-break:break-word}
+
+  .rodape{margin-top:44px;border-top:1px solid var(--borda);padding-top:12px;color:var(--tinta3);font-size:.72rem;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="pagina">
+
+  <p class="selo">FARIA · Agente-Kommo · nota técnica para Marcus Faria · 22 de agosto de 2026</p>
+  <h1>Por que o agente precisa dizer que é uma IA</h1>
+  <p class="lede">Em 17/08 você pediu uma coisa comercialmente sensata: que o agente não parecesse um robô,
+    porque robô afasta cliente. O diagnóstico estava certo — o que faltava era a informação que está aqui.
+    Não dá para fazer um agente que finge ser humano: isso é proibido pelo contrato do fornecedor que roda o
+    agente, colide com o dever de veracidade da OAB e com o princípio da transparência da LGPD.
+    Mas dá para fazer um agente tão bom que ninguém se importe que é uma IA — e é isso que eu proponho.</p>
+
+  <div class="veredito">
+    <div class="txt"><b class="sim">A conclusão em uma linha:</b> o único ponto do agente que está fora da
+      regra é a omissão da natureza artificial na abertura. Todo o resto — não dar parecer, não prometer resultado,
+      não falar de preço, entregar ao humano — já está certo e é exatamente o que as normas pedem.
+      <b>O conserto custa uma frase.</b> Nenhuma capacidade do agente muda.</div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="n">1 frase</div><div class="l">o custo inteiro da correção</div></div>
+    <div class="tile"><div class="n">2 dias</div><div class="l">da decisão (17/08) à conta desativada (19/08)</div></div>
+    <div class="tile"><div class="n">0</div><div class="l">leis brasileiras em vigor que obriguem</div></div>
+    <div class="tile"><div class="n">3</div><div class="l">regimes que já cobram: contrato, OAB, LGPD</div></div>
+    <div class="tile"><div class="n">76% × 72%</div><div class="l">satisfação: IA declarada × humano (Octopus)</div></div>
+    <div class="tile"><div class="n">3/3</div><div class="l">vezes que o agente disse a verdade ao ser perguntado</div></div>
+  </div>
+
+  <!-- ==================== 2. LEI BRASILEIRA ==================== -->
+  <h2><span class="num">1.</span> O que a lei brasileira diz</h2>
+
+  <p><b>Começo pelo que enfraquece o meu argumento, porque você ia descobrir de qualquer jeito.</b>
+    Não existe hoje, em agosto de 2026, nenhuma lei brasileira em vigor que obrigue, de forma expressa e geral,
+    a identificar um atendimento automatizado no setor privado. Não localizei também nenhuma decisão judicial,
+    nota técnica ou auto de infração de Procon punindo um chatbot por não se declarar. Quem te disser
+    "é obrigado por lei" está errado, e você vai desmontar isso em trinta segundos.</p>
+
+  <p>O que existe é diferente e, para o nosso caso, mais relevante: <b>princípios em vigor que já alcançam a
+    conduta</b>, uma <b>direção regulatória de mão única</b>, e — a parte que realmente pesa — <b>uma obrigação
+    contratual exigível hoje</b>, que é o assunto da seção 3.</p>
+
+  <h3>1.1 &nbsp;LGPD — o que já vale hoje</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Lei nº 13.709/2018 (LGPD)</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 6º, caput e inciso VI</div>
+    <blockquote>Art. 6º As atividades de tratamento de dados pessoais deverão observar a boa-fé e os seguintes princípios: [...] VI - transparência: garantia, aos titulares, de informações claras, precisas e facilmente acessíveis sobre a realização do tratamento e os respectivos agentes de tratamento, observados os segredos comercial e industrial;</blockquote>
+    <p class="leitura">O <i>caput</i> não é decoração: a boa-fé é norma de conduta exigível. E a transparência exige
+      informação clara sobre o tratamento <b>e sobre quem são os agentes de tratamento</b>. Um atendimento desenhado
+      para que a pessoa acredite estar falando com um funcionário do escritório é o oposto disso.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Lei nº 13.709/2018 (LGPD)</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 9º, caput (incisos I, III e VII) e § 1º</div>
+    <blockquote>Art. 9º O titular tem direito ao acesso facilitado às informações sobre o tratamento de seus dados, que deverão ser disponibilizadas de forma clara, adequada e ostensiva acerca de, entre outras características previstas em regulamentação para o atendimento do princípio do livre acesso: I - finalidade específica do tratamento; [...] III - identificação do controlador; [...] VII - direitos do titular, com menção explícita aos direitos contidos no art. 18 desta Lei.
+§ 1º Na hipótese em que o consentimento é requerido, esse será considerado nulo caso as informações fornecidas ao titular tenham conteúdo enganoso ou abusivo ou não tenham sido apresentadas previamente com transparência, de forma clara e inequívoca.</blockquote>
+    <p class="leitura">A palavra decisiva é <b>ostensiva</b> — informação ativamente exibida, não disponível sob consulta.
+      É aqui que o modelo de "honestidade reativa" (só confirma se perguntarem) trava: ele cumpre a veracidade e
+      descumpre a ostensividade. E o § 1º fecha: informação apresentada depois, ou com conteúdo enganoso,
+      contamina a validade da coleta.</p>
+  </div>
+
+  <div class="nota-rigor">
+    <b>Ressalva de rigor, para você não ser surpreendido:</b>
+    <p>Circula muito que "a LGPD obriga revisão humana de decisão automatizada". <b>Não obriga mais.</b>
+      A redação original do art. 20 dizia "revisão, <i>por pessoa natural</i>, de decisões..." — a expressão
+      "por pessoa natural" foi <b>suprimida pela Lei nº 13.853/2019</b>, e o § 3º, que permitiria à ANPD exigir
+      revisão humana, foi <b>vetado</b>. Além disso, como o nosso agente só coleta e encaminha, sem decidir nada
+      sozinho, o art. 20 provavelmente <b>nem incide</b>. O peso real da LGPD aqui está nos arts. 6º e 9º.</p>
+  </div>
+
+  <p>Vale registrar ainda o art. 18, VIII: o titular tem direito a ser informado "sobre a possibilidade de não
+    fornecer consentimento e sobre as consequências da negativa". Quem não sabe que fala com uma máquina não tem
+    como avaliar o que está entregando nem a quem. E o § 1º do art. 18 lembra que o titular pode peticionar
+    <b>direto à ANPD</b> — o risco não depende de alguém nos processar; basta uma denúncia.</p>
+
+  <h3>1.2 &nbsp;CDC — reforço, não pilar (e por quê)</h3>
+
+  <p>Você conhece a tese de que o CDC não rege a relação advogado-cliente, e ela é real. Por isso apresento o
+    Código como <b>reforço interpretativo</b>, não como fundamento principal. Mas ele tem dois artigos que
+    descrevem a conduta com precisão desconfortável.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Lei nº 8.078/1990 (CDC)</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 31, caput · Art. 37, § 1º e § 3º · Art. 39, IV</div>
+    <blockquote>Art. 31. A oferta e apresentação de produtos ou serviços devem assegurar informações corretas, claras, precisas, ostensivas e em língua portuguesa sobre suas características, qualidades, quantidade, composição, preço, garantia, prazos de validade e origem, entre outros dados, bem como sobre os riscos que apresentam à saúde e segurança dos consumidores.
+
+Art. 37. § 1° É enganosa qualquer modalidade de informação ou comunicação de caráter publicitário, inteira ou parcialmente falsa, ou, por qualquer outro modo, mesmo por omissão, capaz de induzir em erro o consumidor a respeito da natureza, características, qualidade, quantidade, propriedades, origem, preço e quaisquer outros dados sobre produtos e serviços.
+
+§ 3° Para os efeitos deste código, a publicidade é enganosa por omissão quando deixar de informar sobre dado essencial do produto ou serviço.
+
+Art. 39. É vedado ao fornecedor de produtos ou serviços, dentre outras práticas abusivas: [...] IV - prevalecer-se da fraqueza ou ignorância do consumidor, tendo em vista sua idade, saúde, conhecimento ou condição social, para impingir-lhe seus produtos ou serviços;</blockquote>
+    <p class="leitura">Três expressões fazem o trabalho: <b>"ostensivas"</b> (art. 31), <b>"mesmo por omissão"</b> e
+      <b>"a respeito da natureza"</b> (art. 37, § 1º). E o art. 39, IV traz o elemento que decide tudo:
+      <b>"prevalecer-se"</b>. Enquanto o agente apenas tria e encaminha, o enquadramento é discutível.
+      Se a não-declaração virar instrumento de conversão, o inciso fecha.</p>
+  </div>
+
+  <p>O STJ já fixou o critério da omissão enganosa, e ele é moderado — o que é bom para nós, porque significa
+    que não estamos esticando a lei:</p>
+
+  <div class="cit">
+    <div class="fala">"Não é qualquer omissão informativa que configura o ilícito. Para a caracterização da
+      ilegalidade, a ocultação necessita ser de uma qualidade essencial do produto, do serviço ou de suas reais
+      condições de contratação, de forma a impedir o consentimento esclarecido do consumidor."</div>
+    <div class="quem">REsp 1.705.278, Rel. Min. Antonio Carlos Ferreira, j. 02/12/2019 — conforme matéria oficial
+      do STJ "Os limites da publicidade diante dos direitos do consumidor" (15/08/2021). A mesma matéria registra
+      a necessidade de "considerar o público-alvo do anúncio".</div>
+  </div>
+
+  <p>Aplicado ao nosso caso, vira um teste de três perguntas. <b>É qualidade essencial?</b> Para um serviço cuja
+    substância é confiança pessoal e sigilo, saber se o interlocutor é humano é essencial.
+    <b>Impede o consentimento esclarecido?</b> A pessoa decide o que revelar e quanto confiar sobre uma premissa
+    falsa. <b>Quem é o público-alvo?</b> O STJ manda considerar — e o nosso é o mais frágil possível.</p>
+
+  <div class="aviso">
+    <b>O contra-argumento honesto, dito antes que você o levante:</b>
+    <p>Há linha jurisprudencial do STJ afastando o CDC do contrato de prestação de serviços advocatícios
+      (precedente indicado: EDcl no AgInt no AREsp 1.325.636/SP, Rel. Min. Raul Araújo, j. 21/08/2023,
+      conforme sistematização oficial do TJDFT). <b>Não consegui ler a ementa na fonte primária</b> — o sistema
+      de jurisprudência do STJ exige sessão e não retornou o inteiro teor. Também <b>não localizei súmula nem
+      recurso repetitivo</b> sobre o tema.</p>
+    <p>Mas essa tese não resolve o problema, por três razões: (i) o recorte dela é o <b>contrato</b> — honorários,
+      revisão, responsabilidade — e não a conduta <b>pré-contratual</b> de primeiro contato, que é onde o agente
+      opera; (ii) o próprio CDC, no art. 14, § 4º ("A responsabilidade pessoal dos profissionais liberais será
+      apurada mediante a verificação de culpa"), pressupõe o profissional liberal como fornecedor; (iii) autuação
+      de Procon é ato administrativo autônomo, cuja discussão custa tempo e exposição mesmo quando vencida.
+      <b>É uma defesa possível, não uma autorização prévia.</b></p>
+  </div>
+
+  <div class="bom">
+    <b>Um artigo do CDC que joga a nosso favor:</b>
+    <p>Art. 4º, III — a Política Nacional das Relações de Consumo manda a "compatibilização da proteção do
+      consumidor com a necessidade de desenvolvimento econômico e tecnológico [...] <b>sempre com base na boa-fé</b>
+      e equilíbrio nas relações entre consumidores e fornecedores". O Código não é anti-tecnologia. Ele não proíbe
+      o agente — <b>proíbe o disfarce</b>.</p>
+  </div>
+
+  <h3>1.3 &nbsp;O que <em>não</em> se aplica (e é importante saber)</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Decreto nº 11.034/2022 — regulamento do SAC</span> <span class="chip nao">não se aplica</span></div>
+    <div class="disp">Art. 1º, caput · Art. 2º, parágrafo único · Art. 5º, I</div>
+    <blockquote>Art. 1º Este Decreto regulamenta a Lei nº 8.078, de 11 de setembro de 1990 - Código de Defesa do Consumidor, para estabelecer diretrizes e normas sobre o Serviço de Atendimento ao Consumidor - SAC, no âmbito dos fornecedores dos serviços regulados pelo Poder Executivo federal [...]
+
+Art. 2º, parágrafo único. O disposto neste Decreto não se aplica à oferta e à contratação de produtos e serviços.
+
+Art. 5º Os órgãos ou as entidades reguladoras competentes observarão as seguintes condições mínimas para o atendimento telefônico do consumidor: I - horário de atendimento não inferior a oito horas diárias, com disponibilização de atendimento por humano;</blockquote>
+    <p class="leitura">Circula muito no mercado que "a Lei do SAC obriga a avisar que é um robô". <b>É falso.</b>
+      O Decreto foi lido integralmente e buscado por "automat", "robô", "artificial", "chatbot" e "identific":
+      <b>não há nenhum dever de disclosure</b>. O que existe é direito a atendimento <i>por humano</i> em certos
+      horários, coisa diferente. E são <b>duas exclusões sobrepostas</b>: o escopo alcança só fornecedores de
+      serviços regulados pelo Executivo federal (advocacia é regulada pela OAB), e o art. 2º exclui expressamente
+      a fase de oferta e contratação — que é exatamente a fase do agente.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">ANPD — Resoluções CD/ANPD nº 1/2021 a nº 32/2026</span> <span class="chip nao">inexistente</span></div>
+    <div class="disp">Levantamento do conjunto de resoluções · Agenda Regulatória 2025-2026, item 6</div>
+    <p class="leitura">Nenhuma resolução da ANPD trata de inteligência artificial, chatbots ou dever de informar
+      o titular sobre interação automatizada. A ANPD tem o tema na agenda regulatória e publicou notas técnicas e
+      um Radar Tecnológico sobre IA generativa, além de ter conduzido uma Tomada de Subsídios sobre IA
+      (aberta em 06/11/2024, encerrada em 24/01/2025, 99 contribuições) — mas <b>não editou norma vinculante</b>.
+      Quem disser "a ANPD exige" está errado. O risco chega pela fiscalização dos arts. 6º e 9º da LGPD,
+      não por resolução específica.</p>
+  </div>
+
+  <h3>1.4 &nbsp;O Marco Legal da IA — projeto, não lei</h3>
+
+  <div class="aviso">
+    <b>Antes de tudo, um desmentido:</b>
+    <p>Circula na web (newsletters e blogs) que o Marco Legal da IA teria sido <b>sancionado em 15/07/2026</b>.
+      <b>É falso.</b> A consulta à API de Dados Abertos da Câmara registra a proposição com
+      <code>descricaoSituacao: "Aguardando Parecer"</code> e <code>dataHora: "2026-06-17T19:25"</code>,
+      e não há lei correspondente no acervo do Planalto. Não repita esse número em lugar nenhum.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">PL 2338/2023 — Marco Legal da Inteligência Artificial</span> <span class="chip proj">projeto de lei</span></div>
+    <div class="disp">Tramitação: aprovado pelo Plenário do Senado em 10/12/2024 · autógrafo de 31/01/2025, remetido à Câmara pelo Ofício SF nº 235, de 17/03/2025 · na Câmara, Comissão Especial, relator dep. Aguinaldo Ribeiro (PP-PB), designado em 20/05/2025 · situação em 17/06/2026: "Aguardando Parecer"</div>
+    <p class="leitura">Ao falar disso, a fórmula correta é <b>"o texto aprovado pelo Senado"</b>, nunca "a lei diz".
+      O relator ainda não teve parecer aprovado e o substitutivo dele pode alterar numeração e redação.</p>
+  </div>
+
+  <p>Dito isso, o texto aprovado pelo Senado é a melhor previsão que temos de como a regra vai ficar — e ele tem
+    três dispositivos que descrevem o nosso público com precisão incômoda:</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">PL 2338/2023 — texto aprovado pelo Senado</span> <span class="chip proj">projeto de lei</span></div>
+    <div class="disp">Art. 5º, caput, inciso I e § 2º</div>
+    <blockquote>Art. 5º A pessoa ou grupo afetado por sistema de IA, independentemente do seu grau de risco, tem os seguintes direitos [...]:
+I – direito à informação quanto às suas interações com sistemas de IA, de forma acessível, gratuita e de fácil compreensão, inclusive sobre caráter automatizado da interação, exceto nos casos em que se trate de sistemas de IA dedicados única e exclusivamente à cibersegurança e à ciberdefesa, conforme regulamento;
+
+§ 2º Os sistemas de IA que se destinem a grupos vulneráveis deverão, em todas as etapas de seu ciclo de vida, ser transparentes e adotar linguagem simples, clara e apropriada à idade e à capacidade cognitiva, e ser implementados considerando o melhor interesse desses grupos.</blockquote>
+    <p class="leitura">Três pontos: (1) o direito de saber que a interação é automatizada vale
+      <b>"independentemente do seu grau de risco"</b> — o argumento "nosso bot é inofensivo" não afasta o dever;
+      (2) a única exceção é cibersegurança e ciberdefesa, não atendimento comercial; (3) o § 2º manda ser
+      transparente <b>justamente quando o público é vulnerável</b>. O § 1º ainda aponta o formato: ícone ou
+      símbolo reconhecível — ou seja, disclosure ostensivo, não resposta reativa.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">PL 2338/2023 — texto aprovado pelo Senado</span> <span class="chip proj">projeto de lei</span></div>
+    <div class="disp">Art. 13, caput e inciso I, alínea "b" (sistemas de risco excessivo — vedados) · Art. 80, § 1º, I (vigência)</div>
+    <blockquote>Art. 13. São vedados o desenvolvimento, a implementação e o uso de sistemas de IA:
+I – com o propósito de: [...] b) explorar quaisquer vulnerabilidades da pessoa natural ou de grupos com o objetivo ou o efeito de induzir o seu comportamento de maneira que cause danos à saúde, à segurança ou outros a direitos fundamentais próprios ou de terceiros;
+
+Art. 80. Esta Lei entra em vigor após decorridos 730 (setecentos e trinta) dias de sua publicação oficial.
+§ 1º Entram em vigor após 180 (cento e oitenta) dias da publicação desta Lei: I – o art. 13;</blockquote>
+    <p class="leitura">Repare em <b>"o objetivo OU O EFEITO"</b>: a intenção comercial legítima não salva se o
+      efeito for induzir comportamento com dano a direitos fundamentais. E na vigência: a regra geral é 2 anos,
+      mas <b>o art. 13 — a vedação de explorar vulnerabilidades — vale em 180 dias</b>. A parte que atinge esse
+      comportamento é a primeira a valer.</p>
+    <p class="leitura" style="margin-top:8px"><b>Ressalva de rigor:</b> enquadrar o nosso caso como "risco excessivo"
+      seria uma leitura agressiva e não é automático. O ponto não é dizer que estaríamos proibidos — é mostrar que
+      <b>a zona de risco existe, e é fingir ser humano que empurra o sistema para dentro dela</b>.</p>
+  </div>
+
+  <div class="bom">
+    <b>Achado favorável — e é bom que ele exista:</b>
+    <p>O art. 14 do mesmo texto traz o <b>rol taxativo de alto risco</b> (doze hipóteses: infraestruturas críticas,
+      recrutamento, serviços essenciais, triagem de emergência, administração da justiça, veículos autônomos,
+      saúde, biometria, imigração, entre outras). <b>Um agente de primeiro atendimento que só coleta informação
+      e repassa a humanos não se enquadra em nenhuma delas.</b> O inciso VI (administração da justiça) alcança
+      sistemas que auxiliam <i>autoridades judiciárias</i>, não escritórios; e o parágrafo único ainda exclui a
+      "tarefa processual restrita".</p>
+    <p>Consequência prática: o escritório <b>não</b> teria de fazer avaliação de impacto algorítmico, governança
+      reforçada nem revisão humana obrigatória. Restaria apenas o dever leve do art. 5º, I: dizer que é uma IA.
+      <b>O custo de conformidade que estamos discutindo é, literalmente, uma frase na abertura.</b></p>
+  </div>
+
+  <h3>1.5 &nbsp;A direção regulatória é de mão única</h3>
+
+  <p>Duas frentes independentes caminham na mesma direção, e nenhum regime brasileiro escolheu permitir IA
+    não declarada:</p>
+
+  <div class="rolagem"><table>
+    <tr><th>Norma</th><th>Status</th><th>Alcança o escritório?</th><th>O que exige</th></tr>
+    <tr>
+      <td class="nome">Res.-TSE 23.610/2019, art. 9º-B (redação da Res.-TSE 23.755, de 02/03/2026)</td>
+      <td><span class="chip vig">em vigor</span></td>
+      <td>Não — restrita à propaganda eleitoral</td>
+      <td>Informar "de modo explícito, destacado e acessível" que o conteúdo foi fabricado ou manipulado por IA "e qual tecnologia foi utilizada"</td>
+    </tr>
+    <tr>
+      <td class="nome">Substitutivo aos PL 4089/2024, PL 5441/2025 e PL 6586/2025 — proteção do consumidor no uso de IA</td>
+      <td><span class="chip proj">projeto</span></td>
+      <td>Não — ainda não é lei</td>
+      <td>Segundo a Agência Câmara, obriga informar "de forma clara e destacada, quando o consumidor estiver interagindo com sistemas, respostas ou conteúdos gerados por IA"</td>
+    </tr>
+  </table></div>
+
+  <p>Sobre o segundo: foi aprovado pela Comissão de Ciência, Tecnologia e Inovação da Câmara em 23/06/2026,
+    tramita em caráter conclusivo e ainda passa pelas Comissões de Defesa do Consumidor e de Constituição e
+    Justiça. <b>Não li o inteiro teor do substitutivo</b> — o trecho acima é a descrição da Agência Câmara,
+    órgão oficial de comunicação da Casa, e não transcrição do artigo.</p>
+
+  <p>O ponto retórico, e ele é forte: <b>sempre que o Estado brasileiro decidiu regular uso de IA em comunicação
+    com o público, a solução foi a mesma — informar de modo explícito e destacado.</b> Quem aposta que a regra
+    futura será permissiva está apostando contra todo o histórico.</p>
+
+  <!-- ==================== 3. OAB ==================== -->
+  <h2><span class="num">2.</span> O que a OAB diz</h2>
+
+  <p>Esta é a frente mais forte das três — e ela não só proíbe, ela também <b>autoriza</b>. Começo pela parte
+    que autoriza, porque ela descreve o nosso agente quase palavra por palavra.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Provimento nº 205/2021 do CFOAB</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Anexo Único, verbete "Chatbot"</div>
+    <blockquote>Chatbot — Permitida a utilização para o fim de facilitar a comunicação ou melhorar a prestação de serviços jurídicos, não podendo afastar a pessoalidade da prestação do serviço jurídico, nem suprimir a imagem, o poder decisório e as responsabilidades do profissional. É possível, por exemplo, a utilização no site para responder as primeiras dúvidas de um potencial cliente ou para encaminhar as primeiras informações sobre a atuação do escritório. Ou ainda, como uma solução para coletar dados, informações ou documentos.</blockquote>
+    <p class="leitura">A OAB não apenas tolera: <b>ela autoriza expressamente</b>, e descreve o caso de uso permitido
+      em termos que são quase a especificação do nosso agente — "responder as primeiras dúvidas de um potencial
+      cliente", "encaminhar as primeiras informações sobre a atuação do escritório", "coletar dados, informações
+      ou documentos". <b>O agente já está inteiramente dentro da zona permitida.</b> O único ponto que o empurra
+      para fora é a omissão da natureza artificial.</p>
+    <p class="leitura" style="margin-top:8px">Note o limite: o chatbot não pode "suprimir a imagem [...] e as
+      responsabilidades do profissional". Um bot que se faz passar por humano faz exatamente isso — apaga a figura
+      do advogado responsável por trás do atendimento.</p>
+  </div>
+
+  <p>O verbete vizinho desenha a fronteira com uma nitidez incomum, e confirma que os guardrails que já temos
+    não são conservadorismo do consultor — são a linha literal do Provimento:</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Provimento nº 205/2021 do CFOAB</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Anexo Único, verbete "Aplicativos para responder consultas jurídicas"</div>
+    <blockquote>Aplicativos para responder consultas jurídicas — Não é admitida a utilização de aplicativos de forma indiscriminada para responder automaticamente consultas jurídicas a não clientes por suprimir a imagem, o poder decisório e as responsabilidades do profissional, representando mercantilização dos serviços jurídicos.</blockquote>
+    <p class="leitura">Coletar informação de quem procura o escritório: <b>permitido</b>. Responder automaticamente
+      consulta jurídica a não cliente: <b>vedado</b>. E o público do nosso agente é precisamente "não clientes".
+      É por isso que ele nunca pode "já adiantar" se a pessoa tem direito.</p>
+  </div>
+
+  <h3>2.1 &nbsp;O dispositivo que fala do nosso caso diretamente</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Recomendação nº 001/2024 do Conselho Federal da OAB</span> <span class="chip proj">recomendação — sem força vinculante</span></div>
+    <div class="disp">Item 2.4 · aprovada pelo Conselho Pleno em 11/11/2024 (Proposição nº 49.0000.2024.007325-9/COP), publicada no Diário Eletrônico da OAB, Ano VI, n. 1483, de 14/11/2024</div>
+    <blockquote>2.4. A utilização de assistentes virtuais de atendimento (chatbots) não deve incluir a realização de atividades privativas da advocacia e deve ser informado de forma transparente ao interlocutor que se trata de uma máquina.</blockquote>
+    <p class="leitura">O próprio Conselho Federal, tratando <b>especificamente de chatbots de atendimento</b>,
+      exige transparência ativa sobre a natureza de máquina — não honestidade reativa. Repare na precisão do texto:
+      ele <b>não exige uma palavra específica</b>; exige que a condição de máquina seja informada de forma
+      transparente. Por isso "assistente virtual" satisfaz; "assistente" puro, com a supressão deliberada de
+      "virtual" justamente para que o interlocutor não perceba, não satisfaz.</p>
+  </div>
+
+  <div class="nota-rigor">
+    <b>Eu digo antes que você diga:</b>
+    <p>"Recomendação" <b>não é norma vinculante</b> como um Provimento. Ela foi editada com base no art. 54, III,
+      da Lei 8.906/1994, e não no art. 54, V, que fundamenta os provimentos e o Código de Ética. Por si só, ela
+      não tipifica infração disciplinar autônoma.</p>
+    <p><b>Mas o argumento não depende dela.</b> A Recomendação 001/2024 não inventa um dever novo — ela apenas
+      diz como um dever antigo se aplica a chatbots. Os dois dispositivos abaixo são vinculantes, e é neles que
+      um processo ético-disciplinar se apoiaria.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Código de Ética e Disciplina da OAB (Resolução nº 02/2015-CFOAB)</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 2º, parágrafo único, inciso II</div>
+    <blockquote>Parágrafo único. São deveres do advogado: [...] II - atuar com destemor, independência, honestidade, decoro, veracidade, lealdade, dignidade e boa-fé;</blockquote>
+    <p class="leitura">Base vinculante nº 1. O dever de <b>veracidade, lealdade e boa-fé</b> não admite construir
+      deliberadamente uma aparência falsa de interlocutor humano perante quem procura o escritório. O art. 33 do
+      Estatuto torna o Código cogente ("obriga-se a cumprir <i>rigorosamente</i>"), e o art. 34, XXV, tipifica
+      "manter conduta incompatível com a advocacia".</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Provimento nº 205/2021 do CFOAB</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 3º, caput e inciso II</div>
+    <blockquote>Art. 3º A publicidade profissional deve ter caráter meramente informativo e primar pela discrição e sobriedade, não podendo configurar captação de clientela ou mercantilização da profissão, sendo vedadas as seguintes condutas: [...] II - divulgação de informações que possam induzir a erro ou causar dano a clientes, a outros(as) advogados(as) ou à sociedade;</blockquote>
+    <p class="leitura">Base vinculante nº 2, e a mais afiada. Um agente desenhado para que a pessoa não perceba
+      que fala com uma máquina <b>induz a erro por construção</b> — o erro é o objetivo do desenho, não um efeito
+      colateral. E "induzir a erro" aqui não exige dano consumado nem má-fé: basta a aptidão de induzir.
+      Isto é <b>Provimento</b>, norma cogente para os inscritos, não recomendação.</p>
+  </div>
+
+  <h3>2.2 &nbsp;De quem é a responsabilidade quando um sistema fala pelo escritório</h3>
+
+  <p>Esta é a parte que eu preciso que fique clara, e ela é curta: <b>não existe a figura do "o sistema errou
+    sozinho"</b>. A OAB já resolveu de antemão para quem vai o processo.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Provimento nº 205/2021 do CFOAB</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 1º, § 1º</div>
+    <blockquote>§ 1º As informações veiculadas deverão ser objetivas e verdadeiras e são de exclusiva responsabilidade das pessoas físicas identificadas e, quando envolver pessoa jurídica, dos sócios administradores da sociedade de advocacia que responderão pelos excessos perante a Ordem dos Advogados do Brasil, sem excluir a participação de outros inscritos que para ela tenham concorrido.</blockquote>
+    <p class="leitura">Duas exigências cumulativas — as informações devem ser "objetivas <b>e verdadeiras</b>" —
+      e um endereço certo para a conta: os <b>sócios administradores</b> respondem "pelos excessos perante a OAB".
+      O fecho ("sem excluir a participação de outros inscritos que para ela tenham concorrido") amplia o risco a
+      qualquer advogado do escritório que tenha concorrido para a prática.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Lei nº 8.906/1994 (Estatuto da Advocacia e da OAB)</span> <span class="chip vig">em vigor</span></div>
+    <div class="disp">Art. 17 (redação da Lei nº 13.247/2016) · Art. 32, caput</div>
+    <blockquote>Art. 17. Além da sociedade, o sócio e o titular da sociedade individual de advocacia respondem subsidiária e ilimitadamente pelos danos causados aos clientes por ação ou omissão no exercício da advocacia, sem prejuízo da responsabilidade disciplinar em que possam incorrer.
+
+Art. 32. O advogado é responsável pelos atos que, no exercício profissional, praticar com dolo ou culpa.</blockquote>
+    <p class="leitura">A responsabilidade por dano ao cliente é <b>ilimitada</b> e alcança o patrimônio pessoal do
+      sócio; e o fecho do art. 17 confirma que civil e disciplinar são <b>cumulativas</b>, não alternativas.
+      O art. 32 fecha a porta do "foi o sistema": <b>culpa basta</b> — não é preciso má intenção. Configurar,
+      aprovar ou manter em operação um agente é ato próprio do advogado, praticado por meio de uma ferramenta;
+      a ferramenta não é um terceiro autônomo a quem transferir a conta.</p>
+  </div>
+
+  <div class="aviso">
+    <b>E há um limite que o agente nunca pode cruzar — o que valida o guardrail que já temos:</b>
+    <p>O art. 1º, II, da Lei 8.906/1994 torna privativas de advogado inscrito "as atividades de consultoria,
+      assessoria e direção jurídicas". E o art. 4º: "São nulos os atos privativos de advogado praticados por
+      pessoa não inscrita na OAB, sem prejuízo das sanções civis, penais e administrativas."</p>
+    <p>Traduzindo: se o agente orientar alguém em leilão e a pessoa perder prazo ou direito confiando naquilo,
+      o escritório <b>não tem sequer o ato válido a defender</b> — só o dano a indenizar. É a razão técnica pela
+      qual o agente jamais pode "resolver" a dúvida jurídica. Vale notar também o art. 3º: a própria
+      <b>denominação</b> de advogado é privativa dos inscritos. O agente pode dizer que fala <i>em nome</i> do
+      escritório; não pode assumir a denominação profissional nem deixar que ela seja inferida sem correção.</p>
+  </div>
+
+  <h3>2.3 &nbsp;O direito de falar com uma pessoa</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Recomendação nº 001/2024 do CFOAB</span> <span class="chip proj">recomendação</span></div>
+    <div class="disp">Item 4.3 · Item 3.1</div>
+    <blockquote>4.3. A comunicação com o cliente não pode ser feita apenas a partir de conteúdo gerado por sistemas de IA generativa, resguardado o direito do cliente de interagir com um ser humano mediante solicitação e sendo respeitadas as atividades privativas de advocacia.
+
+3.1. Ao utilizar um sistema de IA generativa, o(a) advogado(a) deve garantir o uso ético da tecnologia, de modo que o julgamento profissional não seja realizado por meio de sistemas de IA generativa sem supervisão humana, não sendo delegada nenhuma atividade privativa da advocacia aos sistemas.</blockquote>
+    <p class="leitura">Isto é requisito de <b>arquitetura</b>, não só de texto: tem de existir uma porta de saída
+      para um humano, acionável a pedido. E expõe uma incoerência prática no desenho de 17/08: <b>se a pessoa não
+      sabe que fala com uma máquina, ela nunca vai pedir para falar com um humano.</b> A omissão do disclosure
+      esvazia esse direito. O disclosure e o direito ao humano são uma coisa só.</p>
+    <p class="leitura" style="margin-top:8px">O item 3.1 valida o desenho que já temos — o agente coleta e
+      encaminha, o humano decide. <b>O problema de 17/08 é pontual e reparável, não estrutural.</b></p>
+  </div>
+
+  <div class="bom">
+    <b>Três pontos em que o escritório já está certo — e vale registrar:</b>
+    <p><b>Não fala de preço.</b> Provimento 205/2021, art. 3º, I, veda "referência, direta ou indireta, a valores
+      de honorários, forma de pagamento, gratuidade ou descontos e reduções de preços como forma de captação de
+      clientes". O guardrail tem lastro normativo direto.</p>
+    <p><b>Não promete resultado.</b> Provimento 205/2021, art. 6º e parágrafo único, veda "a menção à promessa de
+      resultados ou a utilização de casos concretos para oferta de atuação profissional" — e o parágrafo único
+      estende a vedação a <b>qualquer</b> publicidade. O agente jamais pode dizer a quem está com imóvel em leilão
+      "já recuperamos casos assim" ou "dá para reverter".</p>
+    <p><b>Não dá parecer.</b> Verbete "Aplicativos para responder consultas jurídicas" + art. 1º, II, da Lei 8.906/1994.</p>
+  </div>
+
+  <div class="nota-rigor">
+    <b>Duas coisas que não afirmo, por falta de fonte:</b>
+    <p>Não localizei <b>nenhuma ementa, acórdão de Tribunal de Ética e Disciplina ou parecer do CFOAB</b> julgando
+      um caso concreto de agente automatizado que ocultou sua natureza. O material aqui é normativo, não
+      jurisprudencial — <b>não se trata de dizer que "já houve punição por isso"</b>.</p>
+    <p>E <b>nenhuma norma define o que exatamente satisfaz</b> o dever de informar "de forma transparente" — se
+      basta a palavra "virtual", se exige aviso em toda conversa, se vale um aviso no perfil do WhatsApp.
+      A proposta da seção 7 é <b>minha proposta</b>, calibrada para satisfazer as três frentes com folga;
+      não é exigência literal da OAB.</p>
+    <p>Registro ainda: em 10/06/2026 o Conselho Federal anunciou o <b>Plano Nacional de Integração de IA na
+      Advocacia</b> e informou que uma pesquisa em parceria com a Universidade Stanford servirá de base para um
+      <b>futuro provimento</b> sobre uso de IA. Hoje não existe provimento do CFOAB sobre IA em vigor — a norma
+      específica sobre chatbots continua sendo a Recomendação 001/2024. Mas a direção é de aperto, e quando o
+      provimento sair ele terá força cogente.</p>
+  </div>
+
+  <!-- ==================== 4. FORNECEDOR ==================== -->
+  <h2><span class="num">3.</span> O que o fornecedor exige</h2>
+
+  <p><b>Esta seção é a que muda a conversa</b>, porque aqui não se trata de princípio, de projeto de lei ou de
+    interpretação. É <b>contrato</b>, é exigível hoje, e o descumprimento já teve consequência concreta.
+    Nada nesta seção é opinião minha.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Anthropic Usage Policy</span> <span class="chip contr">cláusula contratual</span></div>
+    <div class="disp">Versão "Effective September 15, 2025" · seção "Additional Use Case Guidelines" — regra dos chatbots voltados ao consumidor · página lida ao vivo em 22/08/2026</div>
+    <blockquote class="en">All consumer-facing chatbots, including any external-facing or interactive AI agent, must disclose to users that they are interacting with AI rather than a human. This disclosure must be provided at a minimum at the beginning of each chat session.</blockquote>
+    <p class="trad"><b>Tradução:</b> "Todos os chatbots voltados ao consumidor, incluindo qualquer agente de IA
+      externo ou interativo, <b>devem</b> revelar aos usuários que eles estão interagindo com uma IA e não com um
+      humano. Essa revelação deve ser fornecida, no mínimo, <b>no início de cada sessão de conversa</b>."</p>
+    <p class="leitura"><b>Este é o dispositivo violado.</b> Três palavras decidem tudo: <b>"must"</b> (obrigação,
+      não recomendação), <b>"at the beginning"</b> (na abertura, não quando perguntarem) e
+      <b>"each chat session"</b> (toda conversa, não só a primeira). O desenho de 17/08 — honestidade reativa,
+      sem declaração proativa — é precisamente a hipótese que o texto exclui. Não há margem interpretativa:
+      a cláusula antecipa e fecha o argumento de "mas ele não mente se perguntarem". E o escopo
+      ("any external-facing or interactive AI agent") alcança o agente do WhatsApp mesmo que se recuse o
+      rótulo "chatbot".</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Anthropic Usage Policy</span> <span class="chip contr">cláusula contratual</span></div>
+    <div class="disp">Seção "High-Risk Use Case Requirements" — definição do domínio "Legal" e requisito "Disclosure"</div>
+    <blockquote class="en">Legal: Use cases related to legal interpretation, legal guidance, or decisions with legal implications
+
+Disclosure: If model outputs are presented directly to individuals or consumers, you must disclose to them that you are using AI to help produce your advice, decisions, or recommendations. This disclosure must be provided at a minimum at the beginning of each session.</blockquote>
+    <p class="trad"><b>Tradução:</b> "Jurídico: casos de uso relacionados a interpretação legal, orientação
+      jurídica ou decisões com implicações jurídicas." — "Revelação: se as saídas do modelo forem apresentadas
+      diretamente a indivíduos ou consumidores, você deve revelar a eles que está usando IA para ajudar a produzir
+      seu aconselhamento, decisões ou recomendações. Essa revelação deve ser fornecida, no mínimo, no início de
+      cada sessão."</p>
+    <p class="leitura">Segunda obrigação de disclosure, <b>independente e cumulativa</b> com a primeira: o
+      escritório está sob as duas ao mesmo tempo, porque atendimento jurídico é <b>nomeadamente</b> um caso de
+      alto risco — a Anthropic escreveu "Legal" na lista, não deixou por dedução. Ao lado de saúde, seguros,
+      finanças, emprego e moradia. Ou seja: mesmo que alguém sustentasse que o nosso agente não é um
+      "consumer-facing chatbot", ele continuaria capturado por esta cláusula.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Anthropic Usage Policy</span> <span class="chip contr">cláusula contratual</span></div>
+    <div class="disp">Seção "Universal Usage Standards" &gt; "Do Not Compromise Privacy or Identity Rights" — vedação de impersonation</div>
+    <blockquote class="en">Impersonate a human by presenting results as human-generated, or using results in a manner intended to convince a natural person that they are communicating with a natural person when they are not</blockquote>
+    <p class="trad"><b>Tradução:</b> "[É vedado] fazer-se passar por um humano, apresentando resultados como se
+      fossem gerados por humano, ou usando resultados <b>de maneira destinada a convencer</b> uma pessoa natural
+      de que ela está se comunicando com uma pessoa natural quando não está."</p>
+    <p class="leitura">A palavra decisiva é <b>"intended"</b>. A vedação <b>não exige que o agente minta</b> —
+      alcança usar o sistema "de maneira destinada a convencer" a pessoa de que ela fala com um humano.
+      E note onde a regra mora: em <b>"Universal Usage Standards"</b>, o patamar que vale para todos, sem exceção
+      setorial. Mesmo que não fôssemos alto risco, esta cláusula sozinha já barraria o desenho pretendido.</p>
+  </div>
+
+  <div class="bom">
+    <b>A boa notícia, e ela é grande:</b>
+    <p>A mesma seção de alto risco tem um segundo requisito — <i>Human-in-the-loop</i>: "quando usar nossos
+      produtos ou serviços para fornecer aconselhamento, recomendações ou em tomada de decisão subjetiva que afete
+      diretamente indivíduos ou consumidores, <b>um profissional qualificado naquele campo deve revisar o conteúdo
+      ou a decisão antes da disseminação ou finalização</b>."</p>
+    <p><b>O escritório já cumpre essa parte.</b> O agente coleta e repassa à equipe humana, não dá parecer, não
+      promete resultado, não fala de preço — que é literalmente o que a cláusula pede. Das duas obrigações de alto
+      risco, <b>acertamos a mais cara e difícil, e perdemos a conta pela mais barata</b>.</p>
+  </div>
+
+  <h3>3.1 &nbsp;Por que a conta pôde ser cortada sem aviso</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Anthropic Commercial Terms of Service</span> <span class="chip contr">cláusula contratual</span></div>
+    <div class="disp">Versão "Effective June 17, 2025" · Seção D.2 (Policies and Service Terms) · Seção I.3.a (Service Suspension)</div>
+    <blockquote class="en">D.2 — Customer and its Users may only use the Services in compliance with these Terms, including (a) the Usage Policy
+
+I.3.a — Anthropic may suspend Customer's access to any portion or all of the Services if: (a) Anthropic reasonably believes or determines that [...] (ii) Customer or any User is using the Services in violation of Sections D.1 (Compliance), D.2 (Policies and Service Terms) or D.4 (Use Restrictions)</blockquote>
+    <p class="trad"><b>Tradução:</b> D.2 — "O Cliente e seus Usuários só podem usar os Serviços em conformidade
+      com estes Termos, incluindo (a) a Política de Uso." · I.3.a — "A Anthropic pode suspender o acesso do Cliente
+      a qualquer parte ou à totalidade dos Serviços se a Anthropic <b>razoavelmente acreditar ou determinar</b>
+      que o Cliente ou qualquer Usuário está usando os Serviços em violação das Seções D.1, D.2 ou D.4."</p>
+    <p class="leitura">A D.2 é a dobradiça: é ela que converte a Política de Uso — que poderia parecer um documento
+      de boas intenções no site — em <b>obrigação contratual exigível</b>. E a I.3.a explica o corte sem aviso:
+      o padrão é <b>"reasonably believes OR determines"</b>. Suspeita razoável basta; não há necessidade de prova,
+      de contraditório nem de prazo de cura. Além disso, a suspensão é sobre <b>"any portion or all of the
+      Services"</b> — alcança tudo que roda na conta, não só o agente.</p>
+  </div>
+
+  <p>Vale a distinção, que você vai captar de imediato: <b>suspensão e rescisão seguem regimes diferentes</b>.
+    Rescindir por inadimplemento (Seção I.2, <i>Term and Termination</i>) exige aviso de 30 dias descrevendo a
+    falta e admite purgação — <i>"by providing 30 days prior Notice detailing the nature of the breach unless
+    cured within that time"</i>. Suspender, pela I.3.a, não exige nada disso e é imediato. Foi a suspensão que se
+    aplicou, não a rescisão.</p>
+
+  <div class="bom">
+    <b>E o caminho de volta existe:</b>
+    <p>Seção I.3.b: "Anthropic will use reasonable efforts to provide written notice of any Service Suspension to
+      Customer, and resume providing access to the Services, as soon as reasonably possible after the event giving
+      rise to the Service Suspension is <b>cured, where curable</b>."</p>
+    <p>Tradução: o aviso é obrigação de meio ("reasonable efforts"), não garantia — por isso o corte chega sem
+      explicação clara. Mas o restabelecimento está previsto <b>assim que o evento for sanado, quando sanável</b>.
+      No nosso caso a causa é sanável de forma trivial: repor a declaração de IA na abertura, documentar a
+      correção, pedir reativação. Não é um obituário; é uma correção com prazo.</p>
+  </div>
+
+  <h3>3.2 &nbsp;As duas saídas que não existem</h3>
+
+  <p>Antecipo as duas primeiras perguntas que qualquer dono inteligente faz, e fecho as duas com fonte,
+    não com opinião.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">"E se rodarmos o Claude pela AWS, via Bedrock?"</span> <span class="chip contr">não resolve</span></div>
+    <div class="disp">AWS — "Serverless Third-Party Models on Amazon Bedrock" (página legal) · AWS Bedrock User Guide, "Amazon Bedrock abuse detection"</div>
+    <blockquote class="en">Anthropic Services on Amazon Bedrock are sold by Anthropic. If you use any of these Services on Amazon Bedrock, you agree to Anthropic's terms below.
+
+As part of providing the Service, Amazon Bedrock may use automated abuse detection mechanisms to detect activity that violates our, or third-party model providers', terms of service or use policies. [...] AWS may suspend your access to any model or Amazon Bedrock if you fail to comply with applicable terms or policies or are non-responsive.</blockquote>
+    <p class="trad"><b>Tradução:</b> "Os Serviços da Anthropic no Amazon Bedrock são vendidos pela Anthropic.
+      Se você usar qualquer um desses Serviços no Amazon Bedrock, <b>você concorda com os termos da Anthropic</b>."
+      · "Como parte da prestação do Serviço, o Amazon Bedrock pode usar mecanismos automatizados de detecção de
+      abuso para detectar atividade que viole os termos de serviço ou políticas de uso nossos <b>ou de provedores
+      de modelo terceiros</b>. [...] A AWS pode suspender seu acesso a qualquer modelo ou ao Amazon Bedrock se
+      você deixar de cumprir os termos ou políticas aplicáveis ou não responder."</p>
+    <p class="leitura">O resultado é <b>pior, não melhor</b>: em vez de um fornecedor podendo cortar, passam a ser
+      dois — e a suspensão da AWS alcança "any model or Amazon Bedrock", potencialmente outras cargas do escritório
+      na mesma conta. <b>Mudar de nuvem não muda a política, porque a política acompanha o modelo, não a
+      infraestrutura.</b> A mesma lógica vale para revenda, agregador ou intermediário.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">"E se negociarmos uma exceção com a Anthropic?"</span> <span class="chip contr">não existe para nós</span></div>
+    <div class="disp">Anthropic — Claude Help Center, "Exceptions to our Usage Policy" (última atualização 16/03/2026)</div>
+    <blockquote class="en">Anthropic may enter into contracts with government customers that tailor use restrictions to that customer's public mission and legal authorities.</blockquote>
+    <p class="trad"><b>Tradução:</b> "A Anthropic pode celebrar contratos com <b>clientes governamentais</b> que
+      adaptem as restrições de uso à missão pública e às competências legais daquele cliente."</p>
+    <p class="leitura">O regime de exceções é expressamente restrito a clientes governamentais. Não há previsão de
+      exceção comercial, setorial ou por pedido. Anote o timing: é a peça mais recente desta frente
+      (16/03/2026) — política viva e fiscalizada, não letra morta.</p>
+  </div>
+
+  <div class="nota-rigor">
+    <b>Limites da minha verificação nesta seção:</b>
+    <p>Todas as citações em inglês acima foram extraídas das páginas ao vivo em 22/08/2026, cada uma em duas
+      extrações independentes que bateram entre si. Ainda assim, <b>antes de você assinar qualquer coisa com base
+      neste documento, vale abrir <a href="https://www.anthropic.com/legal/aup">anthropic.com/legal/aup</a> e
+      conferir na tela</b> — é um clique.</p>
+    <p>Registro também: encontrei em fontes secundárias menções a atualizações da Usage Policy em 2026, mas a
+      página ao vivo hoje exibe <b>"Effective September 15, 2025"</b> e não registra data posterior.
+      Trabalhe com essa versão; <b>não cite "versão de 2026"</b>. E não localizei, na Commercial ToS, uma cláusula
+      autônoma dizendo expressamente que o Cliente responde pela conformidade de seus Usuários — isso é inferível
+      da construção de D.2 e I.3.a, mas <b>não afirme que o dispositivo dedicado existe</b>.</p>
+  </div>
+
+  <!-- ==================== 5. O QUE ACONTECEU ==================== -->
+  <h2><span class="num">4.</span> O que aconteceu com a gente</h2>
+
+  <p>Curto e sem drama. O ponto desta seção é um só: <b>o risco não é teórico</b>.</p>
+
+  <div class="linha-tempo">
+    <div class="ev">
+      <div class="quando">17 de agosto</div>
+      <p class="oque"><b>A decisão.</b> Pedido para que o agente não desse a entender que é IA: usar só a palavra
+        "assistente", sem "virtual", sem "IA", sem "robô". O sistema manteve honestidade reativa — se perguntassem
+        se era robô, ele confirmava — mas <b>parou de declarar na abertura</b>. Foi um pedido comercialmente
+        razoável, feito sem a informação que está neste documento.</p>
+    </div>
+    <div class="ev">
+      <div class="quando">18 de agosto</div>
+      <p class="oque"><b>O treino do time comercial.</b> 16 conversas de estresse, 3 testadoras, 172 turnos.
+        A auditoria registrou: <b>zero preço cotado, zero promessa de resultado, e 3 em 3 vezes em que perguntaram
+        "você é um robô?" o agente disse a verdade</b>. A honestidade reativa funcionava. Só que ela não era
+        suficiente — e ninguém no projeto sabia disso ainda.</p>
+    </div>
+    <div class="ev ruim">
+      <div class="quando">19 de agosto</div>
+      <p class="oque"><b>A organização da API foi desativada.</b> Sem aviso prévio e sem prazo de cura — o que é
+        exatamente o que a cláusula I.3.a da Commercial ToS permite.</p>
+    </div>
+    <div class="ev">
+      <div class="quando">20 a 22 de agosto</div>
+      <p class="oque"><b>A auditoria.</b> Levantamento das quatro frentes — LGPD e marco de IA, direito do
+        consumidor, OAB, política dos fornecedores. A conclusão está neste documento: a Usage Policy exige
+        disclosure <b>proativo e na abertura</b>, e o desenho de 17/08 é precisamente a hipótese que a cláusula
+        exclui.</p>
+    </div>
+    <div class="ev boa">
+      <div class="quando">a partir de hoje</div>
+      <p class="oque"><b>A correção.</b> Repor a declaração de IA na abertura, documentar a mudança, pedir a
+        reativação. O caminho de volta é curto porque a causa é sanável — I.3.b.</p>
+    </div>
+  </div>
+
+  <div class="nota-rigor">
+    <b>Honestidade sobre o nexo:</b>
+    <p><b>Eu não tenho acesso à comunicação que a Anthropic enviou</b> informando o motivo da desativação.
+      A correspondência entre a cláusula e o corte é uma <b>inferência forte</b> — o dispositivo se encaixa com
+      precisão e o intervalo é de dois dias —, mas não é causa oficialmente confirmada.</p>
+    <p><b>Pedido:</b> se houver e-mail de notificação da Anthropic, ele é a prova real e o roteiro exato do que
+      precisa ser sanado. Vale recuperá-lo antes de qualquer pedido de reativação.</p>
+  </div>
+
+  <!-- ==================== 6. MAS E A VENDA ==================== -->
+  <h2><span class="num">5.</span> Mas e a venda?</h2>
+
+  <p>Esta é a pergunta certa, e ela merece evidência, não moral. Vou começar pelo melhor argumento
+    <b>do outro lado</b>, com o número inteiro, sem diminuir.</p>
+
+  <h3>5.1 &nbsp;O estudo que dói</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Luo, Tong, Fang &amp; Qu (2019)</span></div>
+    <div class="disp">"Frontiers: Machines vs. Humans: The Impact of Artificial Intelligence Chatbot Disclosure on Customer Purchases", <i>Marketing Science</i> 38(6):937–947</div>
+    <ul>
+      <li>Experimento de campo com <b>mais de 6.200 clientes</b> randomizados.</li>
+      <li>Revelar a identidade de chatbot <b>antes</b> da conversa <b>reduziu a taxa de compra em mais de 79,7%</b>.</li>
+      <li>O chatbot <b>não</b> revelado teve desempenho equivalente ao de atendentes proficientes e cerca de
+        4x melhor que atendentes inexperientes.</li>
+      <li>Mecanismo: sabendo que é máquina, o cliente fica <b>ríspido e encurta a conversa</b>, porque percebe o
+        bot como menos conhecedor e menos empático — mesmo quando a competência real é equivalente.</li>
+    </ul>
+    <p class="leitura">Esse é o número que vai aparecer em qualquer conversa sobre o assunto.
+      <b>Não vou tentar diminuí-lo. Vou enquadrá-lo.</b></p>
+  </div>
+
+  <p><b>Quatro delimitações, todas do próprio estudo:</b></p>
+
+  <div class="rolagem"><table>
+    <tr><th>O que o estudo mediu</th><th>O que nós fazemos</th></tr>
+    <tr><td>Venda ativa de saída — ligações estruturadas para quem <b>não</b> pediu contato</td>
+        <td>Atendimento de entrada — a pessoa <b>procura</b> o escritório, muitas vezes de madrugada, em crise</td></tr>
+    <tr><td>Desfecho: <b>compra imediata</b> na mesma ligação</td>
+        <td>Desfecho: a pessoa contou o suficiente para um advogado avaliar. O agente não vende, não fala preço, não fecha nada</td></tr>
+    <tr><td>O próprio artigo aponta os mitigadores: o efeito negativo <b>é atenuado por estratégia de revelação em momento adequado e por experiência prévia do cliente com IA</b></td>
+        <td>Em 2019, "experiência prévia com IA" era minoria. Em 2026, é o padrão</td></tr>
+    <tr><td>Dado de <b>2019</b> — pré-ChatGPT, sobre uma tecnologia que o público não conhecia</td>
+        <td>Sete anos e uma mudança cultural depois</td></tr>
+  </table></div>
+
+  <h3>5.2 &nbsp;O que a literatura diz do <em>nosso</em> caso</h3>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Mozafari, Weiger &amp; Hammerschmidt (2022)</span></div>
+    <div class="disp">"Trust me, I'm a bot – repercussions of chatbot disclosure in different service frontline settings", <i>Journal of Service Management</i> 33(2):221–245</div>
+    <p class="leitura"><b>Este achado pesa contra nós, e é honesto dizer:</b> revelar reduz retenção via queda de
+      confiança <b>em serviços de alta criticidade</b> — e o nosso é de altíssima criticidade.</p>
+    <p class="leitura" style="margin-top:8px"><b>Mas o achado decisivo é outro:</b> quando o chatbot <b>não consegue
+      resolver</b> a demanda, revelar a identidade não só deixa de prejudicar como <b>produz efeito positivo</b>
+      sobre retenção.</p>
+    <p class="leitura" style="margin-top:8px">Isso é enorme para o desenho do agente. Um agente de triagem
+      <b>vai</b> encontrar casos que não resolve — é o trabalho dele encaminhar. Nesses momentos, ter declarado
+      antes é <b>seguro, não custo</b>. Quem sabia que era IA perdoa a IA. Quem achava que era advogado se sente
+      enganado duas vezes: pelo não-resultado e pela identidade.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Crolic, Thomaz, Hadi &amp; Stephen (2022)</span></div>
+    <div class="disp">"Blame the Bot: Anthropomorphism and Anger in Customer–Chatbot Interactions", <i>Journal of Marketing</i> 86(1):132–148 · cinco estudos, incluindo base real de uma operadora internacional de telecom</div>
+    <p class="leitura">Humanizar o chatbot (nome, avatar, jeito de gente) <b>piora</b> satisfação, avaliação da
+      empresa e intenção de compra — <b>mas somente quando o cliente chega com raiva</b>. Para clientes não
+      irritados, o efeito não aparece. Mecanismo: a humanização <b>infla a expectativa</b> sobre o que o bot
+      consegue fazer; quando frustra, o cliente culpa mais.</p>
+    <p class="leitura" style="margin-top:8px">Este é o achado mais desconfortável para a decisão de 17/08. Usar só
+      "assistente", sem "virtual", é uma estratégia de humanização implícita — e o nosso público
+      <b>chega assustado e sob pressão</b>. É o quadrante exato em que a pesquisa mostra que humanizar sai pela
+      culatra. Não é só arriscado juridicamente: <b>na nossa população, tende a piorar a satisfação</b>.</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Wu et al. (2025)</span> <span class="chip nao">fonte secundária</span></div>
+    <div class="disp">"1 + 1 &lt; 2? Unveiling the impact of AI-assisted disclosure on service satisfaction in professional services", <i>International Journal of Information Management</i> · seis experimentos em serviços profissionais: jurídico, saúde e consultoria</div>
+    <p class="leitura"><b>Ressalva:</b> li o <i>abstract</i> e o sumário; o texto integral está atrás de paywall.
+      Trate os achados abaixo como bem fundamentados, não como conferidos linha a linha.</p>
+    <p class="leitura" style="margin-top:8px">Achado principal, e ele é contra nós: revelar assistência de IA
+      <b>reduz a competência profissional percebida</b> do profissional, e por aí derruba satisfação — um "efeito
+      halo negativo".</p>
+    <p class="leitura" style="margin-top:8px">Achado que importa: o efeito <b>desaparece quando o consumidor
+      percebe a IA como de alta capacidade</b>, e é mitigado por duas estratégias de revelação —
+      <b>capacidade complementar</b> (explicitar que a IA faz X para que o humano faça melhor Y) e
+      <b>autosseleção</b> (dar ao cliente a escolha).</p>
+    <p class="leitura" style="margin-top:8px"><b>Traduzindo:</b> não é a revelação que machuca — é a revelação
+      seca, sem enquadramento de capacidade. "Sou um robô" machuca. "Sou o assistente do escritório, funciono 24h,
+      registro seu caso e levo hoje para um advogado — e você pode pedir para falar com uma pessoa a qualquer
+      momento" não é a mesma coisa, e a literatura diz que não produz o mesmo efeito.
+      <b>Isso é exatamente o que está desenhado na seção 7.</b></p>
+  </div>
+
+  <h3>5.3 &nbsp;O que acontece quando o cliente descobre sozinho</h3>
+
+  <p>Aqui a evidência é a mais unívoca do relatório. Não há "os dois lados" — não encontrei estudo dizendo que
+    descobrir sozinho é neutro ou bom.</p>
+
+  <div class="norma">
+    <div class="cab"><span class="id">McGuire, De Cremer, Hesselbarth, De Schutter, Mai &amp; Van Hiel (2023)</span></div>
+    <div class="disp">"The reputational and ethical consequences of deceptive chatbot use", <i>Scientific Reports</i> 13 · quatro estudos comparando uso <b>transparente</b> vs. <b>enganoso</b> (sem revelação) de chatbot</div>
+
+    <div class="rolagem"><table>
+      <tr><th>Estudo 1 (N=155) — percepção de quem seria cliente</th><th class="num">Transparente</th><th class="num">Enganoso</th><th>Estatística</th></tr>
+      <tr><td>Ética percebida da organização (escala 1–7)</td><td class="num">5,10 (DP 1,01)</td><td class="num">3,83 (DP 1,43)</td><td>p &lt; 0,001; Cohen's f = 0,40</td></tr>
+      <tr><td>Confiança (escala 1–7)</td><td class="num">4,90 (DP 1,11)</td><td class="num">4,06 (DP 1,28)</td><td>p = 0,001; Cohen's f = 0,27</td></tr>
+    </table></div>
+
+    <p class="leitura"><b>Detalhe que muda o argumento:</b> a confiança só diferiu significativamente do grupo de
+      controle <b>na condição transparente</b>. Ou seja, no experimento a transparência não foi custo — foi ganho
+      acima da linha de base. <b>Esconder derrubou; declarar levantou.</b></p>
+
+    <div class="rolagem"><table>
+      <tr><th>Estudo 2 (N=178) — efeito sobre os próprios funcionários</th><th class="num">Transparente</th><th class="num">Enganoso</th><th>Estatística</th></tr>
+      <tr><td>Intenção de sair da empresa (escala)</td><td class="num">2,17</td><td class="num">3,53</td><td>p &lt; 0,001</td></tr>
+      <tr><td>Diriam que sairiam se surgisse oportunidade</td><td class="num">10%</td><td class="num">53%</td><td>χ² = 31,69; p &lt; 0,001</td></tr>
+    </table></div>
+
+    <div class="rolagem"><table>
+      <tr><th>Estudo 4 (N=50 recrutadores de RH profissionais, 21 cidades da China)</th><th class="num">Vindo de org. transparente</th><th class="num">Vindo de org. enganosa</th><th>Estatística</th></tr>
+      <tr><td>Candidato contratado</td><td class="num">88% (22/25)</td><td class="num">24% (6/25)</td><td>χ² = 22,69; p &lt; 0,001; OR = 0,27</td></tr>
+      <tr><td>Confiança no candidato</td><td class="num">4,62</td><td class="num">3,39</td><td>p &lt; 0,001; d = 1,41</td></tr>
+      <tr><td>Salário oferecido (RMB/mês)</td><td class="num">6.364</td><td class="num">5.300</td><td>p &lt; 0,01; d = 0,76</td></tr>
+    </table></div>
+
+    <p class="leitura"><b>O que isso significa concretamente:</b> o dano de usar bot escondido <b>não fica no
+      cliente</b>. Ele contamina a reputação da organização e respinga na carreira de quem trabalhou lá.
+      Num escritório de advocacia em Dourados, onde a reputação do nome Faria é o ativo principal e a comunidade
+      jurídica é pequena, esse é um risco que não aparece em nenhuma planilha de conversão.</p>
+    <p class="leitura" style="margin-top:8px"><b>Sobre reparabilidade</b> (fonte secundária, não conferida em
+      primária): a literatura de violação de confiança sustenta que violações envolvendo <b>engano intencional</b>
+      produzem dano duradouro, potencialmente além de reparo — diferente de falhas de competência, que se
+      recuperam. É a diferença entre "o assistente errou" (perdoável) e "o escritório mentiu sobre quem estava
+      falando comigo" (não perdoável).</p>
+  </div>
+
+  <div class="norma">
+    <div class="cab"><span class="id">Procon-SP — enquete sobre atendimento por chat e IA</span> <span class="chip nao">números não lidos em fonte primária</span></div>
+    <div class="disp">1.043 consumidores que acessaram o site e as redes do Procon-SP · realizada entre setembro e outubro de 2023, divulgada em outubro de 2023 · não é norma nem autuação: é pesquisa de percepção</div>
+    <p class="leitura"><b>Ressalva obrigatória:</b> o site do Procon-SP recusou todas as tentativas de leitura
+      direta. Os percentuais abaixo foram corroborados por duas buscas independentes apontando para a página
+      oficial, mas <b>não foram lidos verbatim na fonte</b>. Confira antes de usá-los fora do escritório.</p>
+    <p class="leitura" style="margin-top:8px">Perguntados se conseguiam identificar rapidamente que interagiam com
+      IA: <b>37% sempre · 35% quase sempre · 14% raramente · 15% nunca</b>. Quase <b>62%</b> afirmaram sentir-se
+      desconfortáveis ou insatisfeitos ao serem atendidos por ferramenta automatizada, contra menos de 18%
+      confortáveis. Cerca de <b>66%</b> não tiveram o problema resolvido apenas com a orientação automatizada.</p>
+    <p class="leitura" style="margin-top:8px">Uso os dois lados, porque usar só um seria desonesto.
+      <b>Primeiro:</b> cerca de 7 em cada 10 pessoas identificam sozinhas que é uma IA. Esconder não funciona na
+      maioria dos casos — só transforma "IA declarada" em <b>"IA flagrada"</b>. E o subgrupo que <i>não</i>
+      identifica (14% + 15%) é justamente o mais vulnerável, que é exatamente quem o escritório atende.
+      <b>Segundo:</b> os 62% de desconforto sustentam a sua preocupação comercial, e ela é real. Mas o desconforto
+      medido é com atendimento automatizado <b>ruim</b> — 66% não tiveram o problema resolvido. O caminho que o
+      dado aponta não é esconder que é IA; é <b>resolver, e entregar a pessoa a um humano no momento certo</b>.</p>
+  </div>
+
+  <h3>5.4 &nbsp;Dois que declaram e vão bem</h3>
+
+  <div class="par">
+    <div class="cartao">
+      <div class="rot">Octopus Energy · "Arlo"</div>
+      <p class="msg"><b>Satisfação de 76% para a IA, contra 72% dos atendentes humanos comparáveis.</b>
+        A IA declarada pontuou <b>acima</b> do humano.</p>
+      <p class="comenta">Assistente de IA que responde e-mails sobre renovação de tarifa, datas de pagamento e
+        dados de conta. No trial de três meses: ~8.000 e-mails por semana, 4% de todos os e-mails recebidos.
+        Regra explícita da empresa: todo e-mail escrito por IA é claramente identificado, e o cliente pode pedir
+        para falar com um atendente humano a qualquer momento. Casos sensíveis vão direto para a equipe humana
+        experiente, sem passar pela IA. <b>Setor regulado, público que inclui gente com dificuldade de pagar a
+        conta de luz.</b></p>
+    </div>
+    <div class="cartao">
+      <div class="rot">Bank of America · "Erica"</div>
+      <p class="msg"><b>3 bilhões de interações acumuladas até agosto de 2025</b>, cerca de 58 milhões por mês e
+        aproximadamente 50 milhões de clientes atendidos desde o lançamento.</p>
+      <p class="comenta">Lançada em junho de 2018, explicitamente marcada como <i>"virtual assistant"</i> — nunca
+        fingiu ser pessoa, tem nome próprio e identidade declarada. Marcos: 1 bilhão em outubro de 2022;
+        1,5 bilhão em julho de 2023; 2 bilhões em abril de 2024. <b>Serviço financeiro, dado sensível, público
+        massivo, identidade de IA declarada desde o primeiro dia — e escala que ninguém alcança escondendo.</b></p>
+    </div>
+  </div>
+
+  <p>O desenho do Octopus é o que eu proporia aqui quase palavra por palavra: <b>rotulagem clara + saída para
+    humano sempre disponível + casos sensíveis roteados fora da IA</b> — e mesmo assim a IA ganha do humano em
+    satisfação. É a prova de existência de que declarar e ir bem não são incompatíveis.</p>
+
+  <div class="veredito">
+    <div class="txt"><b class="sim">A tese, então, não é "temos que declarar apesar do custo".</b>
+      É: <b>declarar cobra um preço pequeno num jogo que não é o nosso — venda fria, fechamento imediato,
+      2019 — e paga um prêmio grande no jogo que é o nosso</b>: alguém que procurou o escritório em crise,
+      que precisa ser ouvido e encaminhado, e que vai encontrar um humano do outro lado de qualquer jeito.</div>
+  </div>
+
+  <!-- ==================== 7. O QUE ENTREGAMOS ==================== -->
+  <h2><span class="num">6.</span> O que a gente entrega em vez disso</h2>
+
+  <p>Vale deixar explícito o que <b>não muda</b> com o disclosure — que é tudo. O agente continua fazendo
+    exatamente o que já faz:</p>
+
+  <div class="rolagem"><table>
+    <tr><th>O que o agente faz</th><th>Muda com o disclosure?</th></tr>
+    <tr><td class="nome">Acolhe. Ouve a história antes de perguntar qualquer coisa, com tom de gente que entende o tamanho do problema</td><td>Não</td></tr>
+    <tr><td class="nome">Constrói rapport ao longo da conversa, sem soar como formulário</td><td>Não</td></tr>
+    <tr><td class="nome">Não faz a pessoa repetir a história — lembra o que já foi dito</td><td>Não</td></tr>
+    <tr><td class="nome">Entende áudio e foto: a pessoa manda o papel do cartório ou fala por áudio, e ele lê</td><td>Não</td></tr>
+    <tr><td class="nome">Entrega ao humano na hora certa — e chega com o caso já registrado</td><td>Não</td></tr>
+    <tr><td class="nome">Funciona às 3 da manhã, que é quando o medo aperta e a pessoa escreve</td><td>Não</td></tr>
+    <tr><td class="nome">Nunca cota preço, nunca promete resultado, nunca dá parecer</td><td>Não</td></tr>
+    <tr><td class="nome">Diz, na primeira mensagem, que é uma inteligência artificial</td><td><b>É isso. Só isso.</b></td></tr>
+  </table></div>
+
+  <p><b>O disclosure custa uma frase na abertura.</b> Não custa uma capacidade, não custa um segundo de latência,
+    não custa uma linha de acolhimento. E, pelo que a literatura mostra (Wu et al., Mozafari et al.), a frase
+    <b>bem enquadrada</b> tende a <i>aumentar</i> a percepção de capacidade em vez de reduzi-la.</p>
+
+  <p>Vale registrar que a honestidade já existe no agente, e ela é boa. Da auditoria de 18/08, a resposta que
+    ele deu 3 de 3 vezes quando as testadoras perguntaram se era robô:</p>
+
+  <div class="cit boa">
+    <div class="fala">"Sou o agente de inteligência artificial do Grupo Faria. Quem analisa seu caso e responde
+      é a nossa equipe, de pessoas de verdade."</div>
+    <div class="quem">conversas 161, 225 e 260 — auditoria do treino de 18/08/2026</div>
+  </div>
+
+  <p><b>Essa frase já está pronta. O que estou pedindo é que ela mude de lugar: da resposta para a abertura.</b></p>
+
+  <div class="nota-rigor">
+    <b>Duas pendências técnicas que a auditoria de 18/08 já tinha apontado:</b>
+    <p>Para não vender a tabela acima como perfeita: a auditoria registrou casos em que o agente <b>repetiu
+      pergunta já respondida</b> (a conversa 260 chegou à quarta repetição depois de um "não quero responder").
+      Isso é defeito de condução, está no plano de conserto e é independente desta discussão — mas não seria
+      honesto listar "não faz repetir a história" sem dizer onde ele ainda escorrega.</p>
+    <p>E o padrão P5 do mesmo relatório registrou que <b>a linha da LGPD sumia em variantes curtas de abertura</b>.
+      Se vamos mexer na abertura agora, é a hora de resolver as duas coisas de uma vez: <b>a declaração de IA e a
+      linha da LGPD precisam valer em TODAS as variantes de abertura</b>, sem exceção — inclusive quando o lead
+      abre a conversa já perguntando algo.</p>
+  </div>
+
+  <!-- ==================== 8. A FRASE ==================== -->
+  <h2><span class="num">7.</span> A frase</h2>
+
+  <p>Aqui está o texto exato que proponho, ao lado do que está no ar desde 17/08.</p>
+
+  <div class="par">
+    <div class="cartao antes">
+      <div class="rot">Como está hoje (desde 17/08)</div>
+      <p class="msg">"Oi, tudo bem? Aqui é o assistente do escritório Marcus Faria. Me conta o que
+        está acontecendo?"</p>
+      <p class="comenta"><b>O que falha:</b> "assistente" sem qualificador leva o interlocutor a presumir pessoa —
+        e a supressão de "virtual" foi deliberada justamente para produzir essa presunção. Isso é o que a Usage
+        Policy chama de usar o sistema <i>"in a manner intended to convince a natural person that they are
+        communicating with a natural person"</i>. Não há disclosure na abertura (Usage Policy), não se informa
+        de forma transparente que é máquina (Recomendação 001/2024, item 2.4), a informação não é ostensiva
+        (LGPD art. 9º) e a pessoa não sabe que pode pedir um humano (Recomendação, item 4.3).</p>
+    </div>
+    <div class="cartao depois">
+      <div class="rot">O que proponho</div>
+      <p class="msg">"Oi, tudo bem? Aqui é o assistente virtual do escritório Marcus Faria — <b>sou uma
+        inteligência artificial</b>, e estou aqui a qualquer hora para ouvir o seu caso e registrar tudo
+        direitinho. <b>Quem analisa e te responde é a nossa equipe de advogados</b>, e você pode pedir para falar
+        com uma pessoa quando quiser.<br><br>Pode me contar o que está acontecendo?"</p>
+      <p class="comenta"><b>O que cada pedaço faz:</b> "sou uma inteligência artificial" satisfaz a Usage Policy
+        e o item 2.4 da Recomendação. "a qualquer hora [...] registrar tudo" é o enquadramento de
+        <b>capacidade complementar</b> que a pesquisa (Wu et al.) mostra que neutraliza a queda de competência
+        percebida. "quem analisa e te responde é a nossa equipe de advogados" preserva a imagem e a
+        responsabilidade do profissional (Provimento 205/2021, verbete "Chatbot") e identifica o controlador
+        (LGPD art. 9º, III). "você pode pedir para falar com uma pessoa" é o direito do item 4.3 —
+        e é a <b>autosseleção</b> que a pesquisa aponta como mitigadora.</p>
+    </div>
+  </div>
+
+  <p>E a segunda mensagem, curta, que fecha a parte de LGPD — hoje ela existe mas some em variantes de abertura:</p>
+
+  <div class="cartao depois" style="margin:14px 0">
+    <div class="rot">Segunda mensagem · linha de LGPD, obrigatória em toda abertura</div>
+    <p class="msg">"O que você contar aqui fica com o escritório Marcus Faria, é usado só para avaliar o seu caso
+      e é protegido pelo sigilo profissional. Você pode pedir a qualquer momento para ver, corrigir ou apagar
+      seus dados."</p>
+    <p class="comenta">Cobre a finalidade específica (LGPD art. 9º, I), a identificação do controlador (art. 9º, III)
+      e a menção aos direitos do titular (art. 9º, VII, remetendo ao art. 18). Amarra também o sigilo profissional,
+      que é de <b>ordem pública</b> e não depende de o cliente pedir (Código de Ética, art. 36 e § 1º: "Presumem-se
+      confidenciais as comunicações de qualquer natureza entre advogado e cliente").</p>
+  </div>
+
+  <h3>7.1 &nbsp;Por que essa frase não afasta ninguém</h3>
+
+  <p>Três razões concretas, não retóricas.</p>
+
+  <ol class="rec">
+    <li><b>Ela não é o "sou um robô" que o estudo de 2019 mediu.</b> Aquele texto era seco e chegava sem ser
+      pedido, numa ligação de venda. Este chega para quem procurou, e vem com capacidade explícita
+      ("a qualquer hora", "registrar tudo") e com saída ("pode pedir para falar com uma pessoa"). Wu et al.
+      mediram exatamente esses dois enquadramentos e encontraram efeito mitigado.</li>
+    <li><b>7 em cada 10 pessoas já identificam de qualquer jeito</b> (Procon-SP, com a ressalva de fonte).
+      A escolha real não é entre "IA declarada" e "IA invisível" — é entre <b>IA declarada</b> e
+      <b>IA flagrada</b>. E a segunda custa a confiança inteira, não o começo dela.</li>
+    <li><b>O agente vai encaminhar — sempre.</b> É a função dele. Mozafari et al. mostram que, no momento em que o
+      bot não resolve, ter declarado antes <b>ajuda</b> a retenção em vez de prejudicar. Declarar é o seguro que
+      se paga na abertura e se cobra no handoff.</li>
+  </ol>
+
+  <div class="aviso">
+    <b>Um limite honesto sobre esta proposta:</b>
+    <p>Nenhuma norma define o que exatamente satisfaz "informar de forma transparente" — se basta a palavra
+      "virtual", se exige aviso em toda conversa, se vale um aviso no perfil do WhatsApp. <b>A redação acima é
+      proposta minha</b>, calibrada para satisfazer as três frentes com folga (a Usage Policy é a mais exigente:
+      "at the beginning of each chat session"). Se você quiser mexer no tom, mexemos — o que não dá para tirar é
+      a declaração de IA na primeira mensagem de cada conversa.</p>
+  </div>
+
+  <!-- ==================== 9. FECHAMENTO ==================== -->
+  <h2><span class="num">8.</span> O que eu preciso de você</h2>
+
+  <p>Uma decisão hoje, e três pendências que só você pode resolver.</p>
+
+  <ol class="rec">
+    <li><b>Aprovar a abertura com disclosure</b> (seção 7). É a decisão que destrava a reativação da conta e
+      fecha a exposição na OAB e na LGPD. Se aprovada hoje, repomos a frase, documentamos a correção e pedimos a
+      reativação com base na cláusula I.3.b ("cured, where curable").</li>
+    <li><b>Retenção de dados:</b> por quanto tempo guardamos as conversas do WhatsApp e os dados coletados na
+      triagem, e o que acontece com quem não vira cliente. A LGPD (art. 9º, II) exige informar "forma e duração
+      do tratamento" — hoje não temos essa resposta escrita. É decisão de negócio, não técnica.</li>
+    <li><b>Encarregado de dados (DPO):</b> quem é a pessoa, e onde publicamos o contato dela. O art. 9º, IV pede
+      "informações de contato do controlador", e o titular pode peticionar direto à ANPD (art. 18, § 1º).</li>
+    <li><b>Transferência internacional:</b> as conversas passam por fornecedor de modelo sediado no exterior.
+      Isso precisa de base legal definida, de finalidade declarada e de menção ao titular — e conecta com o
+      sigilo profissional, que é de ordem pública (Código de Ética, arts. 35 e 36). Também é o momento de
+      confirmar por escrito que o fornecedor <b>não usa os dados para treinamento</b>.</li>
+    <li><b>Recuperar o e-mail de notificação da Anthropic</b> sobre a desativação de 19/08. É a prova real do
+      motivo e o roteiro exato do que precisa ser sanado.</li>
+    <li><b>Uma política escrita de uso de IA no escritório.</b> A Recomendação 001/2024, item 3.6, endereça esse
+      dever diretamente aos sócios e gestores: "Estabelecer políticas claras sobre cibersegurança e o uso
+      permitido de IA no escritório". Com a política escrita, o disclosure vira regra do escritório e deixa de
+      ser uma queda de braço a cada mudança de prompt.</li>
+  </ol>
+
+  <div class="veredito">
+    <div class="txt"><b class="sim">Resumindo o pedido:</b> você pediu um agente que vendesse melhor.
+      A pesquisa diz que o caminho para isso não é esconder que ele é uma IA — é fazer um atendimento que acolhe,
+      que não faz a pessoa repetir a história, que funciona de madrugada e que entrega ao advogado certo na hora
+      certa. <b>Isso a gente já tem.</b> O que falta é uma frase na abertura — e ela é o preço de admissão para
+      continuar tendo tudo o mais.</div>
+  </div>
+
+  <!-- ==================== FONTES ==================== -->
+  <h2><span class="num">9.</span> Fontes</h2>
+
+  <div class="fontes">
+
+    <h3>Legislação brasileira em vigor</h3>
+    <ul>
+      <li>Lei nº 13.709/2018 (LGPD) — arts. 6º, 9º, 18 e 20 · <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm">planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm</a></li>
+      <li>Lei nº 8.078/1990 (CDC) — arts. 3º, 4º, 6º, 14, 30, 31, 37, 39 e 66 · <a href="https://www.planalto.gov.br/ccivil_03/leis/l8078.htm">planalto.gov.br/ccivil_03/leis/l8078.htm</a></li>
+      <li>Lei nº 8.906/1994 (Estatuto da Advocacia e da OAB) — arts. 1º, 3º, 4º, 17, 32, 33 e 34 · <a href="https://www.planalto.gov.br/ccivil_03/leis/l8906.htm">planalto.gov.br/ccivil_03/leis/l8906.htm</a></li>
+      <li>Decreto nº 11.034/2022 (regulamento do SAC) — arts. 1º, 2º e 5º · <b>não se aplica ao escritório</b> · <a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/D11034.htm">planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/D11034.htm</a></li>
+      <li>Resolução-TSE nº 23.610/2019, art. 9º-B, com a redação da Resolução-TSE nº 23.755, de 02/03/2026 — restrita à propaganda eleitoral · texto extraído do Diário da Justiça Eletrônico do TSE, edição extraordinária de 03/03/2026 · <a href="https://sintse.tse.jus.br/documentos/2026/Mar/4/diario-da-justica-eletronico-tse-edicao-extraordinaria/resolucao-no-23-755-de-2-de-marco-de-2026-altera-a-resolucao-no-23-610-tse-de-18-de-dezembro-de-2019">sintse.tse.jus.br</a></li>
+    </ul>
+
+    <h3>Projetos de lei (não são lei)</h3>
+    <ul>
+      <li>PL 2338/2023 — Marco Legal da IA · ficha de tramitação (idProposicao 2487262) · <a href="https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2487262">camara.leg.br — ficha de tramitação</a></li>
+      <li>PL 2338/2023 — inteiro teor do autógrafo aprovado pelo Senado (arts. 5º, 13, 14 e 80) · <a href="https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2868197">camara.leg.br — inteiro teor</a></li>
+      <li>Substitutivo aos PL 4089/2024, PL 5441/2025 e PL 6586/2025 — proteção do consumidor no uso de IA · descrição da Agência Câmara, não transcrição do artigo · <a href="https://www.camara.leg.br/noticias/1284533-comissao-aprova-protecao-de-consumidor-no-uso-de-produto-e-servico-com-inteligencia-artificial">camara.leg.br — Agência Câmara</a></li>
+    </ul>
+
+    <h3>OAB</h3>
+    <ul>
+      <li>Provimento nº 205/2021 do CFOAB — arts. 1º, 2º, 3º e 6º; Anexo Único (verbetes "Chatbot", "Aplicativos para responder consultas jurídicas", "Ferramentas Tecnológicas") · <a href="https://www.oab.org.br/leisnormas/legislacao/provimentos/205-2021">oab.org.br/leisnormas/legislacao/provimentos/205-2021</a></li>
+      <li>Código de Ética e Disciplina da OAB (Resolução nº 02/2015-CFOAB) — arts. 2º, 7º, 9º, 35, 36, 39 e 46 · <a href="https://www.oab.org.br/leisnormas/legislacao/resolucoes/02-2015">oab.org.br/leisnormas/legislacao/resolucoes/02-2015</a></li>
+      <li>Recomendação nº 001/2024 do CFOAB — itens 2.4, 3.1, 3.3, 3.6, 4.1, 4.1.1 e 4.3 · publicada no Diário Eletrônico da OAB, Ano VI, n. 1483, de 14/11/2024 · <a href="https://diario.oab.org.br/assets/diarios/diario-eletronico-oab-14-11-2024.pdf">diario.oab.org.br — DEOAB 14/11/2024 (PDF)</a></li>
+      <li>Plano Nacional de Integração de IA na Advocacia — anúncio institucional de 10/06/2026, não é norma · <a href="https://www.oab.org.br/noticia/64268/conselho-federal-da-oab-anuncia-plano-nacional-para-integrar-inteligencia-artificial-a-advocacia">oab.org.br — notícia 64268</a></li>
+    </ul>
+
+    <h3>Jurisprudência e órgãos</h3>
+    <ul>
+      <li>STJ, REsp 1.705.278, Rel. Min. Antonio Carlos Ferreira, j. 02/12/2019 — critério da publicidade enganosa por omissão, citado na matéria oficial "Os limites da publicidade diante dos direitos do consumidor" (STJ, 15/08/2021) · <a href="https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/15082021-Os-limites-da-publicidade-diante-dos-direitos-do-consumidor.aspx">stj.jus.br</a></li>
+      <li>Inaplicabilidade do CDC ao contrato de serviços advocatícios — precedente indicado: EDcl no AgInt no AREsp 1.325.636/SP, Rel. Min. Raul Araújo, j. 21/08/2023 · <b>ementa não lida em fonte primária</b>; tese confirmada na página oficial "Jurisprudência em Temas" do TJDFT · <a href="https://www.tjdft.jus.br/consultas/jurisprudencia/jurisprudencia-em-temas/cdc-na-visao-do-tjdft-1/definicao-de-consumidor-e-fornecedor/inaplicabilidade-do-cdc-nas-relacoes-entre-cliente-e-advogado">tjdft.jus.br</a></li>
+      <li>ANPD — atos normativos (Resoluções CD/ANPD nº 1/2021 a nº 32/2026): nenhuma trata de IA ou chatbots · <a href="https://www.gov.br/anpd/pt-br/acesso-a-informacao/institucional/atos-normativos/regulamentacoes_anpd">gov.br/anpd — atos normativos</a></li>
+      <li>Procon-SP — enquete sobre atendimento por chat e IA (set-out/2023, 1.043 respondentes) · <b>números não lidos em fonte primária</b>: a página recusou leitura direta · <a href="https://www.procon.sp.gov.br/consumidores-ainda-nao-se-sentem-a-vontade-com-atendimento-por-chat-e-i-a/">procon.sp.gov.br</a></li>
+    </ul>
+
+    <h3>Contratos e políticas de fornecedor</h3>
+    <ul>
+      <li>Anthropic Usage Policy, versão "Effective September 15, 2025" — regra dos chatbots voltados ao consumidor, High-Risk Use Case Requirements (domínio "Legal", Disclosure, Human-in-the-loop), Universal Usage Standards (impersonation) · <a href="https://www.anthropic.com/legal/aup">anthropic.com/legal/aup</a></li>
+      <li>Anthropic Commercial Terms of Service, versão "Effective June 17, 2025" — Seções D.2, I.2 e I.3 · <a href="https://www.anthropic.com/legal/commercial-terms">anthropic.com/legal/commercial-terms</a></li>
+      <li>Anthropic — Claude Help Center, "Exceptions to our Usage Policy" (atualizado em 16/03/2026) · <a href="https://support.claude.com/en/articles/9528712-exceptions-to-our-usage-policy">support.claude.com — artigo 9528712</a></li>
+      <li>AWS — "Serverless Third-Party Models on Amazon Bedrock" (página legal) · <a href="https://aws.amazon.com/legal/bedrock/third-party-models/">aws.amazon.com/legal/bedrock/third-party-models</a></li>
+      <li>AWS — Amazon Bedrock User Guide, "Amazon Bedrock abuse detection" · <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/abuse-detection.html">docs.aws.amazon.com — abuse detection</a></li>
+    </ul>
+
+    <h3>Pesquisa acadêmica e casos de mercado</h3>
+    <ul>
+      <li>Luo, X., Tong, S., Fang, Z. &amp; Qu, Z. (2019). "Frontiers: Machines vs. Humans: The Impact of Artificial Intelligence Chatbot Disclosure on Customer Purchases". <i>Marketing Science</i>, 38(6), 937–947.</li>
+      <li>Mozafari, N., Weiger, W. H. &amp; Hammerschmidt, M. (2022). "Trust me, I'm a bot – repercussions of chatbot disclosure in different service frontline settings". <i>Journal of Service Management</i>, 33(2), 221–245.</li>
+      <li>Crolic, C., Thomaz, F., Hadi, R. &amp; Stephen, A. T. (2022). "Blame the Bot: Anthropomorphism and Anger in Customer–Chatbot Interactions". <i>Journal of Marketing</i>, 86(1), 132–148.</li>
+      <li>McGuire, J., De Cremer, D., Hesselbarth, Y., De Schutter, L., Mai, K. M. &amp; Van Hiel, A. (2023). "The reputational and ethical consequences of deceptive chatbot use". <i>Scientific Reports</i>, 13 · texto integral lido via PMC10533525 · <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10533525/">ncbi.nlm.nih.gov — PMC10533525</a></li>
+      <li>Wu et al. (2025). "1 + 1 &lt; 2? Unveiling the impact of AI-assisted disclosure on service satisfaction in professional services". <i>International Journal of Information Management</i> · <b>fonte secundária</b>: <i>abstract</i> e sumário; texto integral com paywall.</li>
+      <li>Octopus Energy — "Arlo": números e regra de rotulagem conforme <i>press release</i> oficial da empresa. URL não capturada na pesquisa.</li>
+      <li>Bank of America — "Erica": números e marcos conforme <i>press releases</i> oficiais da empresa. URL não capturada na pesquisa.</li>
+    </ul>
+
+    <h3>Interno</h3>
+    <ul>
+      <li>FARIA · Agente-Kommo — "Auditoria do Treino", relatório de 19/08/2026 sobre as 16 conversas de estresse de 18/08/2026 (citação do agente, handoffs, padrão P5 da linha de LGPD).</li>
+    </ul>
+
+  </div>
+
+  <p class="rodape">FARIA · Grupo Faria — nota técnica preparada em 22/08/2026 para conversa com Marcus Faria,
+    a partir de auditoria em quatro frentes (marco legal da IA e LGPD · direito do consumidor · OAB e advocacia ·
+    políticas de fornecedor) mais uma frente de evidência empírica sobre disclosure e conversão.
+    Todo dispositivo citado foi extraído de fonte oficial; onde a fonte primária não pôde ser lida, isso está
+    marcado no corpo do texto e na lista de fontes. Nenhuma norma, número ou precedente aqui veio de memória,
+    blog jurídico ou resumo de terceiro. Documento interno — não é parecer jurídico.</p>
+
+</div>
+
+</body>
+</html>

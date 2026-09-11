@@ -1,0 +1,189 @@
+<title>Fila de leilões</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --grafite:#171C1A; --violeta:#6D4AFF; --lima:#C6F135; --magenta:#F472B6; --papel:#FAFAFA;
+    --bg:var(--grafite); --bg-2:#1F2523; --line:#2C3431; --line-2:#3A423E;
+    --text:var(--papel); --text-2:#A8B2AD; --text-3:#6E7873;
+    --acento:#B9A8FF; --ok:#C6F135; --alerta:#F9A8D4;
+    --font-display:"Archivo","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-text:"Instrument Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --gutter:clamp(20px,6vw,88px); --medida:66ch;
+    --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:40px; --sp-7:64px; --sp-8:100px;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#FBFBFA; --bg-2:#F2F3F1; --line:#E3E6E1; --line-2:#CBD0C9;
+      --text:#171C1A; --text-2:#49534E; --text-3:#7C857F;
+      --acento:#4B29E8; --ok:#4F6B06; --alerta:#B0246C;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#FBFBFA; --bg-2:#F2F3F1; --line:#E3E6E1; --line-2:#CBD0C9;
+    --text:#171C1A; --text-2:#49534E; --text-3:#7C857F;
+    --acento:#4B29E8; --ok:#4F6B06; --alerta:#B0246C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:var(--font-text); font-size:17px; line-height:1.62}
+  .wrap{padding:0 var(--gutter) var(--sp-8); max-width:1100px}
+  p,li{max-width:var(--medida)}
+  a{color:var(--acento)}
+  a:focus-visible{outline:2px solid var(--acento); outline-offset:3px}
+
+  header.topo{padding:var(--sp-8) 0 var(--sp-6); border-bottom:1px solid var(--line)}
+  .kicker{font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); margin:0 0 var(--sp-4)}
+  h1{font-family:var(--font-display); font-weight:700; font-size:clamp(2.4rem,6vw,4rem); line-height:1.02; letter-spacing:-.02em; margin:0 0 var(--sp-4); text-wrap:balance}
+  .lede{font-size:1.2rem; color:var(--text-2); max-width:62ch; margin:0}
+
+  section{padding:var(--sp-7) 0; border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:var(--font-display); font-weight:600; font-size:clamp(1.45rem,2.5vw,2rem); line-height:1.16; margin:0 0 var(--sp-3); text-wrap:balance}
+  h2 .num{font-family:var(--font-mono); font-size:.58em; font-weight:500; color:var(--text-3); margin-right:.8em}
+  .sub{color:var(--text-2); margin:0 0 var(--sp-5)}
+  h3{font-size:1.04rem; font-weight:600; margin:var(--sp-6) 0 var(--sp-3)}
+
+  /* números: linha editorial, sem cards */
+  dl.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:0; margin:var(--sp-5) 0 0; border-top:1px solid var(--line)}
+  dl.nums > div{padding:var(--sp-5) var(--sp-5) var(--sp-5) 0; border-bottom:1px solid var(--line)}
+  dl.nums dt{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-3); margin:0 0 var(--sp-2)}
+  dl.nums dd{margin:0; font-family:var(--font-display); font-weight:600; font-size:1.9rem; line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+  dl.nums dd small{display:block; font-family:var(--font-text); font-weight:400; font-size:.78rem; letter-spacing:0; color:var(--text-3); margin-top:var(--sp-2); line-height:1.4}
+
+  .funil{margin:var(--sp-5) 0 0; border-top:1px solid var(--line)}
+  .funil .etapa{display:grid; grid-template-columns:7ch 1fr auto; gap:var(--sp-4); align-items:center; padding:var(--sp-4) 0; border-bottom:1px solid var(--line)}
+  .funil .qtd{font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:1.05rem}
+  .funil .barra{height:6px; border-radius:3px; background:var(--line-2); position:relative; overflow:hidden}
+  .funil .barra i{position:absolute; inset:0 auto 0 0; background:var(--acento); border-radius:3px}
+  .funil .barra.ok i{background:var(--ok)}
+  .funil .rot{font-size:.95rem; color:var(--text-2); white-space:nowrap}
+
+  ul.linhas{list-style:none; margin:0; padding:0}
+  ul.linhas li{padding:var(--sp-4) 0; border-top:1px solid var(--line); max-width:none}
+  ul.linhas li > *{max-width:var(--medida)}
+  .tag{display:inline-block; font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-right:var(--sp-3); border:1px solid var(--line-2); color:var(--text-2)}
+  .tag.ok{color:var(--ok); border-color:color-mix(in oklab,var(--ok) 45%,var(--line-2))}
+  .tag.dec{color:var(--acento); border-color:color-mix(in oklab,var(--acento) 45%,var(--line-2))}
+  .tag.risco{color:var(--alerta); border-color:color-mix(in oklab,var(--alerta) 45%,var(--line-2))}
+
+  .rolagem{overflow-x:auto; margin:var(--sp-5) 0; border-top:1px solid var(--line)}
+  table{border-collapse:collapse; width:100%; min-width:560px; font-size:.95rem}
+  th,td{text-align:left; vertical-align:top; padding:var(--sp-4) var(--sp-5) var(--sp-4) 0; border-bottom:1px solid var(--line)}
+  th{font-family:var(--font-mono); font-weight:500; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-3)}
+  td.n{font-family:var(--font-mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+
+  .destaque{border-left:3px solid var(--acento); padding:var(--sp-3) 0 var(--sp-3) var(--sp-5); margin:var(--sp-5) 0; font-size:1.08rem}
+  .destaque p{margin:0 0 var(--sp-3)} .destaque p:last-child{margin:0}
+
+  footer{padding:var(--sp-7) 0 var(--sp-8); color:var(--text-3); font-size:.9rem}
+  code{font-family:var(--font-mono); font-size:.87em; color:var(--text-2)}
+
+  td.al{color:var(--alerta)}
+  table a{color:var(--acento); text-decoration:none; border-bottom:1px solid color-mix(in oklab,var(--acento) 40%,transparent)}
+  table a:hover{border-bottom-color:var(--acento)}
+</style>
+<div class="wrap">
+
+  <header class="topo">
+    <p class="kicker">FAR<span style="color:var(--acento)">\</span>IA · Fila de leilões · 11 de setembro de 2026, 10h</p>
+    <h1>Quem tem leilão na mesa</h1>
+    <p class="lede">Dezenove pessoas falaram de leilão com o agente neste mês. Sete estão esperando resposta agora, e uma delas tem leilão daqui a uma semana e está há quase três dias sem ninguém.</p>
+  </header>
+
+  <section>
+    <h2><span class="num">01</span>Responder hoje</h2>
+    <p class="sub">O lead falou por último e ninguém voltou. Ordenado por quem espera há mais tempo.</p>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th style="width:14%">Lead</th><th style="width:10%">Tier</th><th style="width:18%">Leilão</th><th style="width:26%">Onde</th><th style="width:16%">Esperando</th><th style="width:16%">Quem tem</th></tr></thead>
+        <tbody>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21747265">21747265</a></td><td class="al"><strong>A · 70</strong></td><td><strong>18/09</strong></td><td>residência</td><td class="n al"><strong>70 h</strong></td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23836386">23836386</a></td><td>B · 65</td><td>sem data</td><td>Goiânia</td><td class="n al"><strong>71 h</strong></td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/22231073">22231073</a></td><td class="al"><strong>A · 78</strong></td><td>não sabe a data</td><td>Trindade, GO</td><td class="n al"><strong>41 h</strong></td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21527351">21527351</a></td><td>C · 32</td><td>já passou</td><td>—</td><td class="n">41 h</td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23847947">23847947</a></td><td class="al"><strong>A · 63</strong></td><td><strong>20/09</strong></td><td>Cachoeirinha</td><td class="n">20 h</td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23557561">23557561</a></td><td>B · 59</td><td>sem data</td><td>—</td><td class="n">20 h</td><td>equipe</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23665913">23665913</a></td><td>C · 42</td><td>“talvez este mês”</td><td>—</td><td class="n">17 h</td><td>equipe</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="destaque">
+      <p><strong>O primeiro da lista é o caso.</strong> Tier A, pontuação 70, leilão marcado para 18 de setembro — daqui a uma semana — e a última palavra foi dele, há setenta horas. O agente está calado por contrato, porque alguém da equipe já assumiu a conversa.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span>Leilão com data marcada</h2>
+    <p class="sub">Sete pessoas, todas tier A. São elas que dão o prazo do mês.</p>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th style="width:16%">Data</th><th style="width:16%">Lead</th><th style="width:12%">Score</th><th style="width:30%">Onde fica o imóvel</th><th style="width:26%">Situação</th></tr></thead>
+        <tbody>
+          <tr><td class="n al"><strong>sábado, 14/09</strong></td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23515435">23515435</a></td><td class="n">83</td><td>Campos dos Goytacazes</td><td>equipe assumiu</td></tr>
+          <tr><td class="n al"><strong>sábado, 14/09</strong></td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23415845">23415845</a></td><td class="n">75</td><td>Altamira, PA</td><td>equipe assumiu</td></tr>
+          <tr><td class="n">18/09</td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21747265">21747265</a></td><td class="n">70</td><td>residência</td><td class="al"><strong>esperando há 70 h</strong></td></tr>
+          <tr><td class="n">18/09</td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23559155">23559155</a></td><td class="n">62</td><td>Belo Horizonte, MG</td><td>handoff do agente</td></tr>
+          <tr><td class="n">20/09</td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23847947">23847947</a></td><td class="n">63</td><td>Cachoeirinha</td><td class="al"><strong>esperando há 20 h</strong></td></tr>
+          <tr><td class="n">30/09</td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23844921">23844921</a></td><td class="n">70</td><td>Sertaneja</td><td>equipe assumiu</td></tr>
+          <tr><td class="n">não sabe</td><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/22231073">22231073</a></td><td class="n">78</td><td>Trindade, GO</td><td class="al"><strong>esperando há 41 h</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Dois leilões no sábado.</strong> Os dois com a equipe, os dois com oito campos preenchidos — são os casos mais completos do mês.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span>Sabe que tem leilão, não sabe quando</h2>
+    <p class="sub">Oito pessoas, tier B. Falta a data para virar urgência.</p>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th style="width:16%">Lead</th><th style="width:12%">Score</th><th style="width:32%">Onde</th><th style="width:40%">Situação</th></tr></thead>
+        <tbody>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/22261743">22261743</a></td><td class="n">64</td><td>Betim</td><td class="al"><strong>ninguém falou com ela</strong> — 9 campos, arrematado</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23539549">23539549</a></td><td class="n">59</td><td>João Pessoa</td><td class="al"><strong>ninguém falou com ele</strong> — 8 campos</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23855839">23855839</a></td><td class="n">65</td><td>Feira de Santana, BA</td><td class="al"><strong>handoff pedido, sem atendente</strong></td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21988459">21988459</a></td><td class="n">68</td><td>Carapicuíba, SP</td><td>handoff, pediu pessoa duas vezes</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23836386">23836386</a></td><td class="n">65</td><td>Goiânia</td><td class="al"><strong>esperando há 71 h</strong></td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23834297">23834297</a></td><td class="n">56</td><td>São José do Rio Preto, SP</td><td>handoff do agente</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23844511">23844511</a></td><td class="n">59</td><td>Erechim</td><td>equipe assumiu — 10 campos, o mais completo</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23557561">23557561</a></td><td class="n">59</td><td>—</td><td class="al"><strong>esperando há 20 h</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Três pessoas deste bloco nunca falaram com ninguém do escritório, e duas delas têm oito e nove campos preenchidos — ou seja, contaram o caso inteiro ao agente e pararam aí.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span>Leilão já aconteceu</h2>
+    <p class="sub">Quatro pessoas, tier C. A urgência aqui é outra: o imóvel já foi arrematado.</p>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th style="width:20%">Lead</th><th style="width:30%">Quando foi</th><th style="width:50%">Situação</th></tr></thead>
+        <tbody>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23856747">23856747</a></td><td>agosto de 2025</td><td class="al">ninguém falou com ele</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21695653">21695653</a></td><td>novembro do ano passado</td><td class="al">ninguém falou com ela</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/21527351">21527351</a></td><td>“já faz tempo”</td><td class="al">esperando há 41 h</td></tr>
+          <tr><td class="n"><a href="https://gestaomarcusfariaadvbr.kommo.com/leads/detail/23665913">23665913</a></td><td>“talvez este mês”</td><td class="al">esperando há 17 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Esses quatro estão em C porque a régua de urgência olha data futura de leilão. Se imóvel já arrematado virar tier A, como está em discussão, este bloco muda de lugar inteiro.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span>Duas coisas que este levantamento mostrou</h2>
+    <ul class="linhas">
+      <li><span class="tag risco">Subcontagem</span><strong>A classificação está perdendo cinco casos de leilão.</strong> Pela etiqueta da conversa são 14; contando quem falou de data de leilão, são 19. Os outros cinco entraram como parcelas em atraso ou imóvel arrematado, e a data apareceu no meio da conversa.</li>
+      <li><span class="tag risco">Perecível</span><strong>Sete dos oito tier A do sistema inteiro estão nesta lista.</strong> Eles são A por causa da data. Passado o dia 30, caem sozinhos, sem ninguém decidir nada.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Medido no banco do agente em 11 de setembro de 2026, às 10h. Conversas de produção, leads reais, desde 1º de setembro. “Esperando” conta desde a última mensagem da pessoa quando ninguém respondeu depois. Os links abrem o card no CRM. Documento interno do Grupo Marcus Faria. Contém identificadores de atendimento: não encaminhe fora da equipe.</p>
+  </footer>
+
+</div>

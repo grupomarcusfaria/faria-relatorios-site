@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Meus horários de ligação</title>
+<style>
+  :root{--grafite:#171C1A;--violeta:#8E71FF;--lima:#C6F135;--magenta:#F472B6;--papel:#FAFAFA;
+    --bg:var(--grafite);--bg-2:#1F2523;--bg-3:#262D2A;--line:#2C3431;--line-2:#3A423E;--text:var(--papel);--text-2:#A8B2AD;--text-3:#6E7873}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Anthropic Sans",-apple-system,"Segoe UI",Roboto,sans-serif}
+  .fio{height:3px;background:linear-gradient(90deg,var(--lima),transparent 65%)}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 22px 70px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  h1{font-size:26px;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--text-2);margin:4px 0 0;font-size:14px;max-width:560px}
+  .sub a{color:var(--violeta)}
+  .ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  input,button,select{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--text)}
+  input[type=time]{width:106px;padding:6px 8px;font-variant-numeric:tabular-nums}
+  input[type=date]{width:150px;padding:6px 8px}
+  input[type=number]{width:70px}
+  button{cursor:pointer}
+  button.primario{border-color:var(--lima);background:var(--lima);color:var(--grafite);font-weight:600;padding:10px 18px}
+  button.leve{border-color:var(--line-2);color:var(--text-2);padding:4px 10px;font-size:13px}
+  button.leve:hover{color:var(--text);border-color:var(--violeta)}
+  button:disabled{opacity:.5;cursor:default}
+  .abas{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 18px}
+  .abas button{border-radius:999px;padding:6px 14px;color:var(--text-2)}
+  .abas button.ativa{border-color:var(--violeta);color:var(--text);background:rgba(142,113,255,.16)}
+  h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violeta);margin:26px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+  h2 small{letter-spacing:0;text-transform:none;color:var(--text-3);font-weight:400;margin-left:8px}
+  .dia{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
+  .dia label.nome{display:flex;gap:8px;align-items:center;font-weight:600;padding-top:6px}
+  .dia label.nome input{width:16px;height:16px;margin:0;accent-color:var(--lima)}
+  .dia.off .faixas{opacity:.35;pointer-events:none}
+  .faixas{display:flex;flex-direction:column;gap:6px}
+  .faixa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--text-2)}
+  .exc{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .exc input[type=text]{flex:1;min-width:140px;padding:6px 10px}
+  .exc .ate{color:var(--text-3)}
+  .rodape{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 30%);padding:22px 0 6px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:20px}
+  .status{color:var(--text-2);font-size:13px}
+  .status.erro{color:var(--magenta)}
+  .status.ok{color:var(--lima)}
+  .nota{font-size:13px;color:var(--text-3);margin:6px 0 0}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="fio"></div>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Meus horários de ligação</h1>
+      <p class="sub">Marque os dias e faixas em que você atende ligação. A Marina só oferece ao lead horário em que <b>alguém da equipe está livre</b>; quem distribui as ligações é a Layana, pela <a href="agenda.html">agenda</a>.</p>
+    </div>
+    <div class="ctrl">
+      <input id="pin" type="password" placeholder="sua chave" autocomplete="off">
+      <button id="btn">Entrar</button>
+    </div>
+  </header>
+  <div id="status" class="status">Digite a sua chave e clique em Entrar.</div>
+
+  <div id="painel" hidden>
+    <div class="abas" id="abas"></div>
+    <div id="editor"></div>
+    <div class="rodape">
+      <button id="salvar" class="primario">Salvar horários</button>
+      <span id="salvo" class="status"></span>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var BASE = "https://established-lifetime-house-resolution.trycloudflare.com/webhook"; // túnel efêmero: caiu, é re-deploy com a URL nova
+  var DIAS = { 1: "segunda", 2: "terça", 3: "quarta", 4: "quinta", 5: "sexta", 6: "sábado", 7: "domingo" };
+  var $ = function (id) { return document.getElementById(id); };
+  var pin = $("pin"), status = $("status"), painel = $("painel"), abas = $("abas"), editor = $("editor"), salvo = $("salvo");
+  var dados = null, atual = null; // resposta do webhook; id da atendente aberta (0 = escritório)
+  var qs = new URLSearchParams(location.search);
+  try { pin.value = qs.get("k") || localStorage.getItem("faria_horarios_k") || ""; } catch (e) {}
+  if (qs.get("k")) { try { history.replaceState(null, "", location.pathname); } catch (e) {} } // a chave não fica na barra de endereço
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function hojeISO() { return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Campo_Grande" }).format(new Date()); }
+
+  function atendente(id) { for (var i = 0; i < dados.atendentes.length; i++) if (dados.atendentes[i].id === id) return dados.atendentes[i]; return null; }
+
+  function desenharAbas() {
+    var html = "";
+    dados.atendentes.forEach(function (a) { html += '<button data-id="' + a.id + '" class="' + (a.id === atual ? "ativa" : "") + '">' + esc(a.nome) + "</button>"; });
+    if (dados.quem.admin) html += '<button data-id="0" class="' + (atual === 0 ? "ativa" : "") + '">Escritório inteiro</button>';
+    abas.innerHTML = html;
+    abas.hidden = !(dados.atendentes.length > 1 || dados.quem.admin);
+  }
+
+  function linhaFaixa(f) {
+    return '<div class="faixa">das <input type="time" class="ini" value="' + esc(f.inicio) + '" step="300"> às <input type="time" class="fim" value="' + esc(f.fim) + '" step="300"> <button class="leve tirar" type="button" title="tirar esta faixa">tirar</button></div>';
+  }
+  function linhaExc(e, escritorio) {
+    return '<div class="exc"><input type="date" class="data" value="' + esc(e.data || "") + '" min="' + hojeISO() + '">' +
+      '<span class="ate">das</span> <input type="time" class="ini" value="' + esc(e.inicio || "") + '" step="300" title="vazio = dia inteiro"> <span class="ate">às</span> <input type="time" class="fim" value="' + esc(e.fim || "") + '" step="300">' +
+      (escritorio ? ' <span class="ate">vagas</span> <input type="number" class="cap" min="0" max="9" value="' + (e.capacidade == null ? 0 : e.capacidade) + '" title="0 = fechado">' : "") +
+      ' <input type="text" class="motivo" placeholder="motivo (opcional)" value="' + esc(e.motivo || "") + '" maxlength="80"> <button class="leve tirar" type="button">tirar</button></div>';
+  }
+
+  function desenharEditor() {
+    var g = dados.grade || {}, uteis = g.dias_uteis || [1, 2, 3, 4, 5];
+    var janelas = (g.janelas || []).map(function (j) { return j.inicio + "–" + j.fim; }).join(" e ");
+    var html = "";
+    if (atual === 0) {
+      html += "<h2>Fechamentos do escritório inteiro<small>valem para todo mundo: feriado, reunião geral, ponto facultativo</small></h2>";
+      html += '<div id="excs">' + (dados.excecoes_escritorio || []).map(function (e) { return linhaExc(e, true); }).join("") + "</div>";
+      html += '<p><button class="leve" id="addexc" type="button">+ adicionar fechamento</button></p>';
+      html += '<p class="nota">Dia inteiro: deixe as horas vazias. Vagas 0 = fechado; um número maior limita quantas ligações cabem naquela faixa, seja lá quem estiver de plantão.</p>';
+      editor.innerHTML = html; return;
+    }
+    var a = atendente(atual); if (!a) { editor.innerHTML = ""; return; }
+    html += "<h2>Semana de " + esc(a.nome) + "<small>grade do escritório: " + esc(janelas) + " · ligação de " + (g.duracao_min || 30) + " min</small></h2>";
+    uteis.forEach(function (d) {
+      var faixas = a.disponibilidade.filter(function (f) { return f.dia_semana === d; });
+      html += '<div class="dia' + (faixas.length ? "" : " off") + '" data-dia="' + d + '"><label class="nome"><input type="checkbox" class="atende"' + (faixas.length ? " checked" : "") + "> " + DIAS[d] + '</label><div class="faixas">' + faixas.map(linhaFaixa).join("") + '<div><button class="leve add" type="button">+ faixa</button></div></div></div>';
+    });
+    html += '<p class="nota">Desmarcou o dia = você não recebe ligação nesse dia da semana. Horário fora da grade do escritório não vira vaga.</p>';
+    html += "<h2>Folgas e ausências<small>datas em que você não atende (dia inteiro ou uma faixa)</small></h2>";
+    html += '<div id="excs">' + (a.excecoes || []).map(function (e) { return linhaExc(e, false); }).join("") + "</div>";
+    html += '<p><button class="leve" id="addexc" type="button">+ adicionar folga</button></p>';
+    editor.innerHTML = html;
+  }
+
+  // lê o que está na tela → JSON que o webhook grava
+  function coletar() {
+    var disp = [], exc = [];
+    editor.querySelectorAll(".dia").forEach(function (el) {
+      if (!el.querySelector(".atende").checked) return;
+      var d = parseInt(el.getAttribute("data-dia"), 10);
+      el.querySelectorAll(".faixa").forEach(function (f) {
+        var ini = f.querySelector(".ini").value, fim = f.querySelector(".fim").value;
+        if (ini && fim && fim > ini) disp.push({ dia_semana: d, inicio: ini, fim: fim });
+      });
+    });
+    editor.querySelectorAll(".exc").forEach(function (el) {
+      var data = el.querySelector(".data").value; if (!data) return;
+      var ini = el.querySelector(".ini").value, fim = el.querySelector(".fim").value, cap = el.querySelector(".cap");
+      var e = { data: data, inicio: ini && fim ? ini : "", fim: ini && fim ? fim : "", motivo: el.querySelector(".motivo").value.trim() };
+      if (cap) e.capacidade = parseInt(cap.value, 10) || 0;
+      exc.push(e);
+    });
+    return { disponibilidade: disp, excecoes: exc };
+  }
+
+  function guardarNaMemoria() { // o que está na tela vira o estado, para trocar de aba sem perder edição
+    if (!dados || atual === null) return;
+    var c = coletar();
+    if (atual === 0) { dados.excecoes_escritorio = c.excecoes; return; }
+    var a = atendente(atual); if (!a) return;
+    a.disponibilidade = c.disponibilidade; a.excecoes = c.excecoes;
+  }
+
+  function aplicar(resp) {
+    dados = resp;
+    if (atual === null || (atual !== 0 && !atendente(atual))) atual = dados.atendentes.length ? dados.atendentes[0].id : 0;
+    desenharAbas(); desenharEditor();
+    painel.hidden = false;
+    status.className = "status"; status.textContent = "Você está como " + dados.quem.nome + (dados.quem.admin ? " (vê e edita todas)" : "") + ".";
+  }
+
+  async function entrar() {
+    var k = pin.value.trim(); if (!k) { status.textContent = "Falta a chave."; return; }
+    try { localStorage.setItem("faria_horarios_k", k); } catch (e) {}
+    status.className = "status"; status.textContent = "Carregando…";
+    try {
+      var r = await fetch(BASE + "/horarios?k=" + encodeURIComponent(k), { cache: "no-store" });
+      if (r.status === 401) { status.className = "status erro"; status.textContent = "Chave errada."; painel.hidden = true; return; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      aplicar(await r.json());
+    } catch (e) { status.className = "status erro"; status.textContent = "Não consegui carregar: " + e.message + " (o túnel do n8n pode ter mudado)."; }
+  }
+
+  async function salvar() {
+    guardarNaMemoria();
+    var k = pin.value.trim(); var c = coletar();
+    if (atual !== 0 && !c.disponibilidade.length && !confirm("Você não marcou nenhum horário: a Marina não vai contar com você em nenhum dia. Salvar assim mesmo?")) return;
+    $("salvar").disabled = true; salvo.className = "status"; salvo.textContent = "Salvando…";
+    try {
+      var corpo = new URLSearchParams(); corpo.set("k", k); corpo.set("atendente_id", String(atual)); corpo.set("dados", JSON.stringify(c));
+      var r = await fetch(BASE + "/horarios", { method: "POST", body: corpo, cache: "no-store" }); // form-urlencoded: sem preflight
+      if (r.status === 401) { salvo.className = "status erro"; salvo.textContent = "Sem permissão para salvar esta aba."; return; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      var resp = await r.json(); var lembra = atual; aplicar(resp); atual = lembra; desenharAbas(); desenharEditor();
+      salvo.className = "status ok"; salvo.textContent = "Salvo às " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Campo_Grande" }) + ". A Marina já usa estes horários.";
+    } catch (e) { salvo.className = "status erro"; salvo.textContent = "Não salvou: " + e.message; }
+    finally { $("salvar").disabled = false; }
+  }
+
+  abas.addEventListener("click", function (ev) {
+    var b = ev.target.closest("button[data-id]"); if (!b) return;
+    guardarNaMemoria(); atual = parseInt(b.getAttribute("data-id"), 10); salvo.textContent = ""; desenharAbas(); desenharEditor();
+  });
+  editor.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (t.classList.contains("tirar")) { t.closest(".faixa, .exc").remove(); return; }
+    if (t.classList.contains("add")) { var g = dados.grade || {}, j = (g.janelas || [])[0] || { inicio: "08:40", fim: "11:00" }; t.parentNode.insertAdjacentHTML("beforebegin", linhaFaixa({ inicio: j.inicio, fim: j.fim })); return; }
+    if (t.id === "addexc") { $("excs").insertAdjacentHTML("beforeend", linhaExc({ data: "", inicio: "", fim: "", motivo: "" }, atual === 0)); return; }
+  });
+  editor.addEventListener("change", function (ev) {
+    if (!ev.target.classList.contains("atende")) return;
+    var dia = ev.target.closest(".dia"); dia.classList.toggle("off", !ev.target.checked);
+    // marcou um dia vazio: nasce com a grade inteira do escritório, para ajustar em vez de digitar do zero
+    if (ev.target.checked && !dia.querySelector(".faixa")) { var g = dados.grade || {}; (g.janelas || []).forEach(function (j) { dia.querySelector(".add").parentNode.insertAdjacentHTML("beforebegin", linhaFaixa({ inicio: j.inicio, fim: j.fim })); }); }
+  });
+  $("btn").addEventListener("click", entrar);
+  $("salvar").addEventListener("click", salvar);
+  pin.addEventListener("keydown", function (ev) { if (ev.key === "Enter") entrar(); });
+  if (pin.value) entrar();
+})();
+</script>
+</body>
+</html>

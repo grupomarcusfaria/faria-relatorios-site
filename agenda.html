@@ -36,6 +36,9 @@
   .lig.bloq{border-left-color:var(--text-3);background:rgba(255,255,255,.06);color:var(--text-2)}
   .lig b{font-weight:600}
   .lig small{color:var(--text-3)}
+  .quem{position:absolute;bottom:4px;right:8px;display:flex;gap:3px}
+  .quem i{font-style:normal;font-size:10px;line-height:16px;width:16px;text-align:center;border-radius:4px;background:rgba(198,241,53,.14);color:var(--text-2);cursor:default}
+  .cel.ninguem{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(244,114,182,.07) 6px 12px)}
   h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violeta);margin:30px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
   ul.lista{list-style:none;margin:0;padding:0}
   ul.lista li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
@@ -49,7 +52,7 @@
 <div class="fio"></div>
 <div class="wrap">
   <header>
-    <div><h1>Agenda de ligações</h1><p class="sub">Marina + equipe · fonte: banco do agente (ligações combinadas) e tarefas do Kommo · <span id="quando">…</span></p></div>
+    <div><h1>Agenda de ligações</h1><p class="sub">Marina + equipe · fonte: banco do agente (ligações combinadas), horários das atendentes e tarefas do Kommo · <span id="quando">…</span> · <a href="horarios.html" style="color:var(--violeta)">horários das atendentes</a></p></div>
     <div class="ctrl">
       <input id="pin" type="password" placeholder="chave de acesso" autocomplete="off">
       <input id="dias" type="number" min="1" max="21" value="7" title="dias à frente" style="width:70px">
@@ -62,6 +65,7 @@
     <span style="--c:var(--text-3)">tarefa do Kommo (ocupa 1 vaga)</span>
     <span style="--c:var(--magenta)">sem vaga</span>
     <span>hachurado = FECHADO</span>
+    <span style="--c:rgba(198,241,53,.35)">iniciais = quem está livre pra ligar (a Layana distribui)</span>
   </div>
   <div id="grade" class="grade" hidden></div>
   <div id="status" class="status">Digite a chave e clique em Carregar.</div>
@@ -104,9 +108,11 @@
       diasArr.forEach(function (d) {
         var s = slots.filter(function (x) { return x.dia === d && x.hora === h; })[0];
         var ini = s ? new Date(s.inicio).getTime() : null;
-        var cls = "cel" + (s && s.fecha_tudo ? " fechado" : "") + (ini && ini < agora ? " passado" : "");
+        var quem = (s && s.disponiveis) || [];
+        var cls = "cel" + (s && s.fecha_tudo ? " fechado" : "") + (ini && ini < agora ? " passado" : "") + (s && !s.fecha_tudo && s.capacidade === 0 ? " ninguem" : "");
         var inner = "";
-        if (s) inner += '<span class="vagas' + (s.livres === 0 ? " cheio" : "") + '">' + s.livres + "/" + s.capacidade + "</span>";
+        if (s) inner += '<span class="vagas' + (s.livres === 0 ? " cheio" : "") + '" title="' + esc(quem.join(", ") || "ninguém disponível") + '">' + s.livres + "/" + s.capacidade + "</span>";
+        if (quem.length) inner += '<span class="quem">' + quem.map(function (n) { return '<i title="' + esc(n) + '">' + esc(n.charAt(0)) + "</i>"; }).join("") + "</span>";
         ligs.forEach(function (l) { var li = new Date(l.inicio).getTime(); if (dLocal(l.inicio) === d && hLocal(l.inicio) === h) inner += '<span class="lig' + (l.confirmada ? " ok" : "") + '"><b>' + esc(l.nome || "lead " + l.lead_id) + "</b> <small>#" + l.lead_id + (l.confirmada ? " · confirmada" : "") + "</small></span>"; });
         bloqs.forEach(function (b) { if (s && new Date(b.inicio).getTime() < new Date(s.inicio).getTime() + 30 * 60000 && new Date(b.fim).getTime() > new Date(s.inicio).getTime() && dLocal(b.inicio) === d) inner += '<span class="lig bloq">' + esc((b.titulo || "tarefa").slice(0, 40)) + "</span>"; });
         if (!s && !inner) { cls += " passado"; }
@@ -117,7 +123,7 @@
     var sh = a.sem_hora || []; $("semhora").innerHTML = sh.length ? sh.map(function (x) { return "<li><b>" + esc(x.nome || "lead " + x.lead_id) + "</b><span>#" + x.lead_id + "</span><span>" + esc(x.periodo || "") + " · até " + new Date(x.prazo).toLocaleString("pt-BR", { timeZone: "America/Campo_Grande", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) + "</span></li>"; }).join("") : "<li><span>nenhuma</span></li>";
     var ex = a.excecoes || []; $("excecoes").innerHTML = ex.length ? ex.map(function (e) { return "<li><b>" + fmtDia(e.data) + "</b><span>" + (e.inicio ? e.inicio.slice(0, 5) + "–" + (e.fim || "").slice(0, 5) : "dia inteiro") + "</span><span>capacidade " + e.capacidade + "</span><span>" + esc(e.motivo) + "</span></li>"; }).join("") : "<li><span>nenhuma (bloqueios do dia a dia: tarefa FECHADO no Kommo)</span></li>";
     $("extras").hidden = false;
-    $("quando").textContent = "gerado " + new Date(a.gerado_em).toLocaleString("pt-BR", { timeZone: "America/Campo_Grande" }) + " · capacidade " + (a.cfg && a.cfg.capacidade) + " por horário";
+    $("quando").textContent = "gerado " + new Date(a.gerado_em).toLocaleString("pt-BR", { timeZone: "America/Campo_Grande" }) + " · vagas por horário = atendentes livres naquele horário";
     status.textContent = ligs.length + " ligação(ões) com hora · " + sh.length + " só com período · " + bloqs.length + " tarefa(s) do Kommo na agenda";
   }
 

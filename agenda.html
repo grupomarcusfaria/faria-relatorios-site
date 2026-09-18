@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Agenda de ligações</title>
+<style>
+  :root{--grafite:#171C1A;--violeta:#8E71FF;--lima:#C6F135;--magenta:#F472B6;--papel:#FAFAFA;
+    --bg:var(--grafite);--bg-2:#1F2523;--bg-3:#262D2A;--line:#2C3431;--line-2:#3A423E;--text:var(--papel);--text-2:#A8B2AD;--text-3:#6E7873}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Anthropic Sans",-apple-system,"Segoe UI",Roboto,sans-serif}
+  .fio{height:3px;background:linear-gradient(90deg,var(--lima),transparent 65%)}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 60px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  h1{font-size:26px;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--text-2);margin:4px 0 0;font-size:14px}
+  .ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .ctrl input,.ctrl button{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--text)}
+  .ctrl button{cursor:pointer;border-color:var(--violeta)}
+  .legenda{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin:8px 0 18px}
+  .legenda span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+  .grade{display:grid;grid-template-columns:64px repeat(var(--dias,5),1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);overflow-x:auto}
+  .grade>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:44px;padding:6px 8px;font-size:13px}
+  .grade .cab{background:var(--bg-2);font-weight:600;position:sticky;top:0}
+  .grade .cab small{display:block;color:var(--text-3);font-weight:400}
+  .grade .hora{color:var(--text-3);font-variant-numeric:tabular-nums;background:var(--bg-2)}
+  .grade .sep{grid-column:1/-1;min-height:8px;padding:0;background:var(--bg-3)}
+  .cel{position:relative}
+  .cel.passado{opacity:.4}
+  .cel.fechado{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(255,255,255,.05) 6px 12px)}
+  .cel .vagas{position:absolute;top:5px;right:8px;font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .cel .vagas.cheio{color:var(--magenta)}
+  .lig{display:block;margin:2px 0;padding:4px 8px;border-radius:6px;background:rgba(142,113,255,.18);border-left:3px solid var(--violeta);font-size:12.5px;line-height:1.3}
+  .lig.ok{border-left-color:var(--lima);background:rgba(198,241,53,.12)}
+  .lig.bloq{border-left-color:var(--text-3);background:rgba(255,255,255,.06);color:var(--text-2)}
+  .lig b{font-weight:600}
+  .lig small{color:var(--text-3)}
+  h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violeta);margin:30px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+  ul.lista{list-style:none;margin:0;padding:0}
+  ul.lista li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
+  ul.lista li span{color:var(--text-2)}
+  .status{color:var(--text-2);font-size:13px;margin-top:8px}
+  .status.erro{color:var(--magenta)}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="fio"></div>
+<div class="wrap">
+  <header>
+    <div><h1>Agenda de ligações</h1><p class="sub">Marina + equipe · fonte: banco do agente (ligações combinadas) e tarefas do Kommo · <span id="quando">…</span></p></div>
+    <div class="ctrl">
+      <input id="pin" type="password" placeholder="chave de acesso" autocomplete="off">
+      <input id="dias" type="number" min="1" max="21" value="7" title="dias à frente" style="width:70px">
+      <button id="btn">Carregar</button>
+    </div>
+  </header>
+  <div class="legenda">
+    <span style="--c:var(--violeta)">ligação combinada</span>
+    <span style="--c:var(--lima)">confirmada pelo lead</span>
+    <span style="--c:var(--text-3)">tarefa do Kommo (ocupa 1 vaga)</span>
+    <span style="--c:var(--magenta)">sem vaga</span>
+    <span>hachurado = FECHADO</span>
+  </div>
+  <div id="grade" class="grade" hidden></div>
+  <div id="status" class="status">Digite a chave e clique em Carregar.</div>
+
+  <div id="extras" hidden>
+    <h2>Ligações combinadas sem hora exata (só o período)</h2>
+    <ul class="lista" id="semhora"></ul>
+    <h2>Exceções estruturais</h2>
+    <ul class="lista" id="excecoes"></ul>
+  </div>
+</div>
+<script>
+(function () {
+  var BASE = "https://established-lifetime-house-resolution.trycloudflare.com/webhook"; // túnel efêmero: caiu, é re-deploy com a URL nova
+  var $ = function (id) { return document.getElementById(id); };
+  var pin = $("pin"), dias = $("dias"), grade = $("grade"), status = $("status");
+  try { pin.value = localStorage.getItem("faria_agenda_k") || ""; } catch (e) {}
+  function fmtDia(d) { var p = d.split("-"); return p[2] + "/" + p[1]; }
+  function nomeDia(d) { return ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"][new Date(d + "T12:00:00").getDay()]; }
+  function hLocal(iso) { var dt = new Date(iso); return dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Campo_Grande" }); }
+  function dLocal(iso) { return new Date(iso).toLocaleDateString("en-CA", { timeZone: "America/Campo_Grande" }); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function desenhar(a) {
+    var slots = a.slots || [], ligs = a.ligacoes || [], bloqs = a.bloqueios || [];
+    var diasSet = {}; slots.forEach(function (s) { diasSet[s.dia] = true; }); ligs.forEach(function (l) { diasSet[dLocal(l.inicio)] = true; });
+    var diasArr = Object.keys(diasSet).sort();
+    var horasSet = {}; slots.forEach(function (s) { horasSet[s.hora] = true; });
+    var horas = Object.keys(horasSet).sort();
+    if (!horas.length) { status.textContent = "Nenhum horário na grade para os próximos dias."; return; }
+    grade.style.setProperty("--dias", diasArr.length);
+    var html = '<div class="cab hora"></div>';
+    diasArr.forEach(function (d) { html += '<div class="cab">' + nomeDia(d) + " " + fmtDia(d) + "<small>" + (slots.filter(function (s) { return s.dia === d; }).reduce(function (n, s) { return n + s.livres; }, 0)) + " vagas livres</small></div>"; });
+    var agora = Date.now(); var ultimoPeriodo = null;
+    horas.forEach(function (h) {
+      var per = h < "12:00" ? "manha" : "tarde";
+      if (ultimoPeriodo && per !== ultimoPeriodo) html += '<div class="sep"></div>';
+      ultimoPeriodo = per;
+      html += '<div class="hora">' + h + "</div>";
+      diasArr.forEach(function (d) {
+        var s = slots.filter(function (x) { return x.dia === d && x.hora === h; })[0];
+        var ini = s ? new Date(s.inicio).getTime() : null;
+        var cls = "cel" + (s && s.fecha_tudo ? " fechado" : "") + (ini && ini < agora ? " passado" : "");
+        var inner = "";
+        if (s) inner += '<span class="vagas' + (s.livres === 0 ? " cheio" : "") + '">' + s.livres + "/" + s.capacidade + "</span>";
+        ligs.forEach(function (l) { var li = new Date(l.inicio).getTime(); if (dLocal(l.inicio) === d && hLocal(l.inicio) === h) inner += '<span class="lig' + (l.confirmada ? " ok" : "") + '"><b>' + esc(l.nome || "lead " + l.lead_id) + "</b> <small>#" + l.lead_id + (l.confirmada ? " · confirmada" : "") + "</small></span>"; });
+        bloqs.forEach(function (b) { if (s && new Date(b.inicio).getTime() < new Date(s.inicio).getTime() + 30 * 60000 && new Date(b.fim).getTime() > new Date(s.inicio).getTime() && dLocal(b.inicio) === d) inner += '<span class="lig bloq">' + esc((b.titulo || "tarefa").slice(0, 40)) + "</span>"; });
+        if (!s && !inner) { cls += " passado"; }
+        html += '<div class="' + cls + '">' + inner + "</div>";
+      });
+    });
+    grade.innerHTML = html; grade.hidden = false;
+    var sh = a.sem_hora || []; $("semhora").innerHTML = sh.length ? sh.map(function (x) { return "<li><b>" + esc(x.nome || "lead " + x.lead_id) + "</b><span>#" + x.lead_id + "</span><span>" + esc(x.periodo || "") + " · até " + new Date(x.prazo).toLocaleString("pt-BR", { timeZone: "America/Campo_Grande", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) + "</span></li>"; }).join("") : "<li><span>nenhuma</span></li>";
+    var ex = a.excecoes || []; $("excecoes").innerHTML = ex.length ? ex.map(function (e) { return "<li><b>" + fmtDia(e.data) + "</b><span>" + (e.inicio ? e.inicio.slice(0, 5) + "–" + (e.fim || "").slice(0, 5) : "dia inteiro") + "</span><span>capacidade " + e.capacidade + "</span><span>" + esc(e.motivo) + "</span></li>"; }).join("") : "<li><span>nenhuma (bloqueios do dia a dia: tarefa FECHADO no Kommo)</span></li>";
+    $("extras").hidden = false;
+    $("quando").textContent = "gerado " + new Date(a.gerado_em).toLocaleString("pt-BR", { timeZone: "America/Campo_Grande" }) + " · capacidade " + (a.cfg && a.cfg.capacidade) + " por horário";
+    status.textContent = ligs.length + " ligação(ões) com hora · " + sh.length + " só com período · " + bloqs.length + " tarefa(s) do Kommo na agenda";
+  }
+
+  async function carregar() {
+    var k = pin.value.trim(); if (!k) { status.textContent = "Falta a chave."; return; }
+    try { localStorage.setItem("faria_agenda_k", k); } catch (e) {}
+    status.className = "status"; status.textContent = "Carregando…";
+    try {
+      var r = await fetch(BASE + "/agenda?k=" + encodeURIComponent(k) + "&dias=" + encodeURIComponent(dias.value || "7"), { cache: "no-store" });
+      if (r.status === 401) { status.className = "status erro"; status.textContent = "Chave errada."; return; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      desenhar(await r.json());
+    } catch (e) { status.className = "status erro"; status.textContent = "Não consegui carregar: " + e.message + " (o túnel do n8n pode ter mudado)."; }
+  }
+  $("btn").addEventListener("click", carregar);
+  pin.addEventListener("keydown", function (ev) { if (ev.key === "Enter") carregar(); });
+  if (pin.value) carregar();
+})();
+</script>
+</body>
+</html>

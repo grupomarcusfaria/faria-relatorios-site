@@ -79,7 +79,13 @@
 </div>
 <script>
 (function () {
-  var BASE = "https://established-lifetime-house-resolution.trycloudflare.com/webhook"; // túnel efêmero: caiu, é re-deploy com a URL nova
+  var BASE = "https://discs-still-fascinating-universal.trycloudflare.com/webhook"; // fallback: só vale se o Supabase não responder
+  // 21/09: o túnel do n8n é efêmero e muda sozinho; o vigia publica a URL atual no Supabase (far_tunel) e a página lê aqui.
+  var BASE_PRONTA = fetch("https://oyubhimyeycfvbhpnqwk.supabase.co/rest/v1/rpc/far_tunel", { method: "POST", headers: { apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95dWJoaW15ZXljZnZiaHBucXdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MzIzNDgsImV4cCI6MjEwMDMwODM0OH0.JdopYvvG5zyDCpt2OhEUG-ad1rSaA8DGUTMr3P6vA2g", Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95dWJoaW15ZXljZnZiaHBucXdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MzIzNDgsImV4cCI6MjEwMDMwODM0OH0.JdopYvvG5zyDCpt2OhEUG-ad1rSaA8DGUTMr3P6vA2g", "Content-Type": "application/json" }, body: "{}" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (u) { if (typeof u === "string" && /^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(u)) BASE = u + "/webhook"; })
+    .catch(function () {});
+  function api(caminho, opcoes) { return BASE_PRONTA.then(function () { return window.fetch(BASE + caminho, opcoes); }); }
   var $ = function (id) { return document.getElementById(id); };
   var pin = $("pin"), dias = $("dias"), grade = $("grade"), status = $("status");
   try { pin.value = localStorage.getItem("faria_agenda_k") || ""; } catch (e) {}
@@ -132,7 +138,7 @@
     try { localStorage.setItem("faria_agenda_k", k); } catch (e) {}
     status.className = "status"; status.textContent = "Carregando…";
     try {
-      var r = await fetch(BASE + "/agenda?k=" + encodeURIComponent(k) + "&dias=" + encodeURIComponent(dias.value || "7"), { cache: "no-store" });
+      var r = await api("/agenda?k=" + encodeURIComponent(k) + "&dias=" + encodeURIComponent(dias.value || "7"), { cache: "no-store" });
       if (r.status === 401) { status.className = "status erro"; status.textContent = "Chave errada."; return; }
       if (!r.ok) throw new Error("HTTP " + r.status);
       desenhar(await r.json());

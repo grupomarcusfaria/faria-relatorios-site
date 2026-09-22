@@ -88,7 +88,11 @@
   function api(caminho, opcoes) { return BASE_PRONTA.then(function () { return window.fetch(BASE + caminho, opcoes); }); }
   var $ = function (id) { return document.getElementById(id); };
   var pin = $("pin"), dias = $("dias"), grade = $("grade"), status = $("status");
-  try { pin.value = localStorage.getItem("faria_agenda_k") || ""; } catch (e) {}
+  // 22/09: aceita a chave pelo link (?k=...), como a página de horários — a chave entra e some da barra de endereço.
+  // Sem isso, uma chave velha guardada no navegador tentava sozinha e a página abria em "Chave errada".
+  var qs = new URLSearchParams(location.search);
+  try { pin.value = qs.get("k") || localStorage.getItem("faria_agenda_k") || ""; } catch (e) { pin.value = qs.get("k") || ""; }
+  if (qs.get("k")) { try { history.replaceState(null, "", location.pathname); } catch (e) {} }
   function fmtDia(d) { var p = d.split("-"); return p[2] + "/" + p[1]; }
   function nomeDia(d) { return ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"][new Date(d + "T12:00:00").getDay()]; }
   function hLocal(iso) { var dt = new Date(iso); return dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Campo_Grande" }); }
